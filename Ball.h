@@ -30,8 +30,8 @@ public:
 	const float getxpos() { return pos.x; }
 	const float getypos() { return pos.y; }
 
-	const void moveLeft(bool left);
-	const void moveRight(bool right);
+	const void moveLeft();
+	const void moveRight();
 
 	//Draws ball to screen (+ position)
 	const void drawBall();

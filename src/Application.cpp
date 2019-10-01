@@ -33,6 +33,7 @@ int main(void)
 	glfwSwapInterval(1); //Refresh rate, 0 causes tearing/vsync issues
 
 	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
+	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods, Ball &ball);
 
 	/*const float DEG2RAD = 3.14159 / 180;
 	const float radius = 0.05f;*/
@@ -55,11 +56,7 @@ int main(void)
 		//Movement
 		
 		//Color
-		
-		
-		
-		
-		
+		glfwSetKeyCallback(window, key_callback);
 	
 		
 		//Drawing
@@ -77,4 +74,18 @@ int main(void)
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
+
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods, Ball &ball)
+{
+	if (key == GLFW_KEY_E && action == GLFW_REPEAT) {
+		ball.moveRight();
+	}
+
 }

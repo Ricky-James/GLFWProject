@@ -1,17 +1,15 @@
 #include "Ball.h"
 
-const void Ball::moveLeft(bool left) {
-	if (left) {
-		pos.x -= 0.05f;
-	}
-	else { return; }
+const void Ball::moveLeft() {
+	
+	pos.x -= 0.05f;
+
 
 }
-const void Ball::moveRight(bool right) {
-	if (right) {
-		pos.x += 0.05f;
-	}
-	else { return; }
+const void Ball::moveRight() {
+	
+	pos.x += 0.05f;
+	
 }
 
 const void Ball::drawBall() {
