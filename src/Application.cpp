@@ -4,7 +4,27 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "Ball.h"
+#include "Headers/Ball.h"
+#include "Headers/Paddle.h"
+
+//TO FIX:
+//PROGRAM CRASH WHEN TABBING OUT
+//INPUT?
+
+//TO DO:
+//PHYSICS
+//BUILD UPPER BLOCKS INTO VECTOR
+//LOOK INTO REPLACING PADDLE QUADS
+//3D?
+
+void updateInput(GLFWwindow* window, Paddle &paddle)
+{
+	if (GLFW_KEY_E == GLFW_PRESS) {
+		paddle++;
+		printf("E press");
+	}
+}
+
 
 int main(void)
 {
@@ -15,7 +35,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 
 	
-
+	
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
@@ -33,37 +53,45 @@ int main(void)
 	glfwSwapInterval(1); //Refresh rate, 0 causes tearing/vsync issues
 
 	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
-	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods, Ball &ball);
-
-	/*const float DEG2RAD = 3.14159 / 180;
-	const float radius = 0.05f;*/
+	glfwSetKeyCallback(window, key_callback);
 	
-	Ball ball;
+	//View frustum
+	float ratio;
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	ratio = width / static_cast<float>(height);
+	glViewport(0, 0, width, height);
 
+	Ball ball;
+	Paddle paddle;
+	
 	
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Setup view: */
-		float ratio;
-		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / static_cast<float>(height);
-		glViewport(0, 0, width, height);
 		glClear(GL_COLOR_BUFFER_BIT);
+
 		/* Render here */
 		//Movement
 		
+		
+
+		//updateInput(window, paddle);
+		
 		//Color
-		glfwSetKeyCallback(window, key_callback);
+	
 	
 		
 		//Drawing
-		glBegin(GL_POLYGON);
+
 		ball.drawBall();
-		glColor3f(100, 100, 100);
-		glEnd();
+		paddle.drawPaddle();
+		
+		
+
+
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
@@ -79,13 +107,8 @@ int main(void)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods, Ball &ball)
-{
-	if (key == GLFW_KEY_E && action == GLFW_REPEAT) {
-		ball.moveRight();
+	if (key == GLFW_KEY_SPACE) {
+		printf("Test");
 	}
-
 }
+

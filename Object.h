@@ -6,11 +6,19 @@ class Object
 {
 private:
 	
+
+
 public:
 	
-	struct Vector2 {
+	virtual struct Vector2
+	{
 	public:
-		float x, y;
+		
+		Vector2(float _x, float _y) {
+			float x = _x;
+			float y = _y;
+		}
+		
 	};
 
 };
