@@ -1,13 +1,15 @@
 #pragma once
-#include "Headers/Object.h"
 #include <GLFW/glfw3.h>
 #include <math.h>
 
-class Ball : public Object
+class Ball 
 {
 
 private:
 	
+	struct Vector2 {
+		float x, y;
+	};
 
 	Vector2 pos, spd;
 	

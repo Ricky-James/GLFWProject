@@ -4,15 +4,21 @@
 class Paddle : public Object
 {
 private:
-
-	Vector2 pos = { 0.f, -0.875f }; //Center co-ord for paddle
-	const float paddleWidth = 0.15f;
-	const float paddleHeight = 0.02f;
-	const float paddleSpeed = 0.03f;
+	const float speed = 0.03f;
 
 public:
 
-	void drawPaddle() const;
+	Paddle()
+	{
+		
+		pos.x = 0.f;
+		pos.y = -0.875f;
+		width = 0.15f;
+		height = 0.02f;
+
+		
+	}
+
 	Paddle operator++(const int x);
 	Paddle operator--(const int x);
 

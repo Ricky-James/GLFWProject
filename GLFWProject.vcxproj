@@ -141,11 +141,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Paddle.cpp" />
     <ClCompile Include="src\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Headers\Block.h" />
     <ClInclude Include="Headers\Ball.h" />
     <ClInclude Include="Headers\Object.h" />
     <ClInclude Include="Headers\Paddle.h" />
