@@ -17,6 +17,6 @@ public:
 	float width;
 	float height;
 
-	virtual void drawBox() const;
+	void drawBox() const;
 };
 

@@ -9,11 +9,16 @@ public:
 	Block(float x, float y) {
 		pos.x = x;
 		pos.y = y;
-		width = 0.1f;
+		width = 0.12f;
 		height = 0.02f;
 		
 	}
 
+	float getX();
+	float getY();
+
+	void drawBox() const;
+	
 
 };
 

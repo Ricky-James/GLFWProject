@@ -9,6 +9,7 @@
 #include "Headers/Paddle.h"
 #include "Headers/Block.h"
 
+
 //TO DO:
 //INPUT
 //PHYSICS
@@ -64,26 +65,23 @@ int main(void)
 
 	Ball ball;
 	Paddle paddle;
-	std::vector<Block*> blocks;
+	std::vector<Block> blocks;
 
 	//Instantiate blocks
-	float xpos;
-	float ypos;
-	for (int i = 0, xpos = -0.85f; i < 5; i++, xpos += 0.3)
+	float xpos = -0.82f; //Starting co-ords
+	float ypos = 0.95f;
+	for (int i = 0; i < 7; i++) //Iterating left to right
 	{
-		for (int n = 0, ypos = 0.95f; n < 5; n++, ypos -= 0.1f)
+		for (int n = 0; n < 5; n++) //Top to bottom
 		{
-			blocks.push_back(new Block(xpos, ypos));
+			blocks.push_back(Block(xpos, ypos)); //Add to vector at current co-ords
+			ypos -= 0.1f; //Reduce Y-coord for each iteration
 		}
+		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
+		xpos += 0.27f; 
 	}
-	/*int c;
-	c = static_cast<int>(blocks.size());
-	
-	exit(c);*/
 	
 	
-	
-
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -105,17 +103,20 @@ int main(void)
 
 		ball.drawBall();
 		paddle.drawBox();
+		
+		
 
-		for (std::vector<Block*>::iterator currentBlock = blocks.begin(); currentBlock != blocks.end(); ++currentBlock)
+		//Iterator for drawing blocks.
+		//Popping blocks will cut them from being drawn.
+		for (Block &block : blocks)
 		{
-			//currentBlock.drawBox();
-			Block* blockCheck = dynamic_cast<Block*>(*currentBlock);
-			
-			if (blockCheck != NULL)
-			{
-				(*blockCheck).drawBox();
-			}
+			block.drawBox();
 		}
+		if (blocks.empty())
+		{
+			//Win condition!
+		}
+	
 
 
 		/* Swap front and back buffers */
