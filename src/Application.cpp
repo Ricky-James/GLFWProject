@@ -4,14 +4,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <vector>
 #include "Headers/Ball.h"
 #include "Headers/Paddle.h"
-
-//TO FIX:
-//PROGRAM CRASH WHEN TABBING OUT
-//INPUT?
+#include "Headers/Block.h"
 
 //TO DO:
+//INPUT
 //PHYSICS
 //BUILD UPPER BLOCKS INTO VECTOR
 //LOOK INTO REPLACING PADDLE QUADS
@@ -62,8 +61,26 @@ int main(void)
 	ratio = width / static_cast<float>(height);
 	glViewport(0, 0, width, height);
 
+
 	Ball ball;
 	Paddle paddle;
+	std::vector<Block*> blocks;
+
+	//Instantiate blocks
+	float xpos;
+	float ypos;
+	for (int i = 0, xpos = -0.85f; i < 5; i++, xpos += 0.3)
+	{
+		for (int n = 0, ypos = 0.95f; n < 5; n++, ypos -= 0.1f)
+		{
+			blocks.push_back(new Block(xpos, ypos));
+		}
+	}
+	/*int c;
+	c = static_cast<int>(blocks.size());
+	
+	exit(c);*/
+	
 	
 	
 
@@ -87,9 +104,18 @@ int main(void)
 		//Drawing
 
 		ball.drawBall();
-		paddle.drawPaddle();
-		
-		
+		paddle.drawBox();
+
+		for (std::vector<Block*>::iterator currentBlock = blocks.begin(); currentBlock != blocks.end(); ++currentBlock)
+		{
+			//currentBlock.drawBox();
+			Block* blockCheck = dynamic_cast<Block*>(*currentBlock);
+			
+			if (blockCheck != NULL)
+			{
+				(*blockCheck).drawBox();
+			}
+		}
 
 
 		/* Swap front and back buffers */

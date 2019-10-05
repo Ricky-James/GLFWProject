@@ -13,5 +13,10 @@ public:
 		float x, y;
 	};
 
+	Vector2 pos;
+	float width;
+	float height;
+
+	virtual void drawBox() const;
 };
 
