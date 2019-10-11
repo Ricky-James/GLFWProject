@@ -10,7 +10,7 @@ public:
 
 	Paddle()
 	{
-		
+		objectType = 1;
 		pos.x = 0.f;
 		pos.y = -0.875f;
 		width = 0.15f;

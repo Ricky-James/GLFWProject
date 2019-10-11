@@ -59,9 +59,10 @@ int main(void)
 
 	glfwSwapInterval(1); //Refresh rate, 0 causes tearing/vsync issues
 
+	
+	glfwSetCursorPosCallback(window, cursorPositionCallback); //Cursor input
 	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
-	glfwSetCursorPosCallback(window, cursorPositionCallback);
-	glfwSetKeyCallback(window, key_callback);
+	glfwSetKeyCallback(window, key_callback); //Unused
 	
 	//View frustum
 	float ratio;
@@ -109,7 +110,9 @@ int main(void)
 		
 		//Drawing
 
+		glLoadIdentity();
 		ball.drawBall();
+		glLoadIdentity();
 		paddle.drawBox();
 		
 		
@@ -118,6 +121,7 @@ int main(void)
 		//Popping blocks will cut them from being drawn.
 		for (Block &block : blocks)
 		{
+			glLoadIdentity();
 			block.drawBox();
 		}
 		if (blocks.empty())
@@ -142,9 +146,7 @@ int main(void)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_SPACE) {
-		printf("Test");
-	}
+	//Unused. Possible menu functionality in the future?
 }
 
 static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
