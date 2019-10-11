@@ -19,6 +19,7 @@ public:
 		
 	}
 
+	void setXPos(float x);
 	Paddle operator++(const int x);
 	Paddle operator--(const int x);
 

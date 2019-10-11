@@ -9,6 +9,10 @@
 #include "Headers/Paddle.h"
 #include "Headers/Block.h"
 
+#include <iostream>
+
+#define SCREENWIDTH 640
+#define SCREENHEIGHT 640
 
 //TO DO:
 //INPUT
@@ -17,12 +21,15 @@
 //LOOK INTO REPLACING PADDLE QUADS
 //3D?
 
+float* cursorXPos = new float();
+
+static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
+
 void updateInput(GLFWwindow* window, Paddle &paddle)
 {
-	if (GLFW_KEY_E == GLFW_PRESS) {
-		paddle++;
-		printf("E press");
-	}
+	paddle.setXPos(*cursorXPos);
+	
+	std::cout << "Xpos: " << (*cursorXPos) << std::endl;
 }
 
 
@@ -40,7 +47,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 640, "OpenGL Project", NULL, NULL);
+	window = glfwCreateWindow(SCREENWIDTH, SCREENHEIGHT, "OpenGL Project", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -53,6 +60,7 @@ int main(void)
 	glfwSwapInterval(1); //Refresh rate, 0 causes tearing/vsync issues
 
 	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
+	glfwSetCursorPosCallback(window, cursorPositionCallback);
 	glfwSetKeyCallback(window, key_callback);
 	
 	//View frustum
@@ -93,7 +101,7 @@ int main(void)
 		
 		
 
-		//updateInput(window, paddle);
+		updateInput(window, paddle);
 		
 		//Color
 	
@@ -139,3 +147,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
+static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
+{
+	//Conversion from pixel co-ord to GL co-ord (-1 to 1)
+	//-0.5 to center the cursor/paddle on Y
+	//*2 to cover full -1 to 1 range
+	(*cursorXPos) = ((xPos / SCREENWIDTH) - 0.5f) * 2; 
+
+}
