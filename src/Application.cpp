@@ -10,9 +10,10 @@
 #include "Headers/Paddle.h"
 #include "Headers/Block.h"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 640
+#include <iostream>
 
+#define SCREENWIDTH 640
+#define SCREENHEIGHT 640
 
 //TO DO:
 //INPUT
@@ -20,12 +21,15 @@
 //LOOK INTO REPLACING PADDLE QUADS
 //3D?
 
+float* cursorXPos = new float();
+
+static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
+
 void updateInput(GLFWwindow* window, Paddle &paddle)
 {
-	if (GLFW_KEY_E == GLFW_PRESS) {
-		paddle++;
-		printf("E press");
-	}
+	paddle.setXPos(*cursorXPos);
+	
+	std::cout << "Xpos: " << (*cursorXPos) << std::endl;
 }
 
 bool cursorActive;
@@ -47,7 +51,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Project", NULL, NULL);
+	window = glfwCreateWindow(SCREENWIDTH, SCREENHEIGHT, "OpenGL Project", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -59,7 +63,11 @@ int main(void)
 
 	glfwSwapInterval(1); //Refresh rate, 0 causes tearing/vsync issues
 
+	
+	glfwSetCursorPosCallback(window, cursorPositionCallback); //Cursor input
 	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
+	glfwSetKeyCallback(window, key_callback); //Unused
+	
 	glfwSetKeyCallback(window, key_callback);
 
 	glfwSetCursorEnterCallback(window, cursorEnterCallback);
@@ -104,13 +112,18 @@ int main(void)
 		//Movement
 		
 		
+
+		//updateInput(window, paddle);
+		
 		//Color
 	
 	
 		
 		//Drawing
 
+		glLoadIdentity();
 		ball.drawBall();
+		glLoadIdentity();
 		paddle.drawBox();
 		
 		
@@ -119,6 +132,7 @@ int main(void)
 		//Popping blocks will cut them from being drawn.
 		for (Block block : blocks)
 		{
+			glLoadIdentity();
 			block.drawBox();
 		}
 		if (blocks.empty())
@@ -173,5 +187,12 @@ static void cursorPositionCallback(GLFWwindow* window, double x, double y)
 		std::cout << test << std::endl;
 	//	std::cout << x << ", " << y << std::endl;
 	}
+
+static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
+{
+	//Conversion from pixel co-ord to GL co-ord (-1 to 1)
+	//-0.5 to center the cursor/paddle on Y
+	//*2 to cover full -1 to 1 range
+	(*cursorXPos) = ((xPos / SCREENWIDTH) - 0.5f) * 2; 
 
 }
