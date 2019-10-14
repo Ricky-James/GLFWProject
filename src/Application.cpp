@@ -1,7 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream> //for debug purposes
 
-#include <Box2D.h>
+#include <Box2D/Box2D.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -14,6 +14,7 @@
 
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
+#define PPM 36 //Pixels per meter ratio for Box2D MKS conversion
 
 //TO DO:
 //PHYSICS
@@ -21,9 +22,8 @@
 //3D?
 
 
-bool cursorActive;
+bool* cursorActive = new bool();
 float* cursorXPos = new float();
-
 
 
 
@@ -36,6 +36,8 @@ void updatePaddlePos(GLFWwindow* window, Paddle& paddle);
 
 int main(void)
 {
+
+
 	
 	GLFWwindow* window;
 	/* Initialize the library */
@@ -43,7 +45,7 @@ int main(void)
 		exit(EXIT_FAILURE);
 
 	
-	
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
@@ -62,11 +64,11 @@ int main(void)
 
 	
 
-
+	//Input callback setup
 	glfwSetKeyCallback(window, key_callback); 
 	glfwSetCursorEnterCallback(window, cursorEnterCallback);
 	glfwSetCursorPosCallback(window, cursorPositionCallback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //hides cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //hides cursor and prevents movement from being disabled when outside window
 	
 	//View frustum
 	
@@ -74,6 +76,16 @@ int main(void)
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 	
+
+	//Create Box2D World
+
+	b2Vec2 gravity(0.0f, -10.0f);
+	b2World* world = new b2World(gravity);
+	world->SetWarmStarting(true);
+	world->SetContinuousPhysics(true);
+
+	b2BodyDef* bodyDef = new b2BodyDef();
+	b2Body* groundBody = world->CreateBody(bodyDef);
 
 
 	Ball ball;
@@ -173,11 +185,11 @@ static void cursorEnterCallback(GLFWwindow* window, int entered)
 {
 	if (entered)
 	{
-		cursorActive = true;
+		*cursorActive = true;
 		std::cout << "Entered" << std::endl;
 	}
 	else {
-		cursorActive = false;
+		*cursorActive = false;
 	}
 }
 

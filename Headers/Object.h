@@ -1,5 +1,6 @@
 #pragma once
 #include <GLFW/glfw3.h>
+#include <Box2D/Box2D.h>
 
 
 class Object
@@ -20,6 +21,8 @@ public:
 	float height;
 
 	float colour[3];
+
+
 
 	void drawBox() const;
 };

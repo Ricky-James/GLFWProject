@@ -6,6 +6,9 @@ class Paddle : public Object
 private:
 	const float speed = 0.03f;
 
+	b2BodyDef bdef;
+
+
 public:
 
 	Paddle()
@@ -20,10 +23,13 @@ public:
 		colour[2] = 0;
 		
 	}
+	
 
 	void setXPos(float x);
 	Paddle operator++(const int x);
 	Paddle operator--(const int x);
+
+	
 
 };
 
