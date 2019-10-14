@@ -1,7 +1,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream> //for debug purposes
 
-//#include <Box2D/Box2D.h>
+#include <Box2D.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -16,26 +16,23 @@
 #define SCREENHEIGHT 640
 
 //TO DO:
-//INPUT
 //PHYSICS
 //LOOK INTO REPLACING PADDLE QUADS
 //3D?
 
-float* cursorXPos = new float();
-
-static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos);
-
-void updateInput(GLFWwindow* window, Paddle &paddle)
-{
-	paddle.setXPos(*cursorXPos);
-	
-	std::cout << "Xpos: " << (*cursorXPos) << std::endl;
-}
 
 bool cursorActive;
+float* cursorXPos = new float();
 
-void cursorEnterCallback(GLFWwindow* window, int entered);
+
+
+
+
+//Input callbacks
+static void cursorEnterCallback(GLFWwindow* window, int entered);
 static void cursorPositionCallback(GLFWwindow* window, double x, double y);
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void updatePaddlePos(GLFWwindow* window, Paddle& paddle);
 
 int main(void)
 {
@@ -64,21 +61,17 @@ int main(void)
 	glfwSwapInterval(1); //Refresh rate, 0 causes tearing/vsync issues
 
 	
-	glfwSetCursorPosCallback(window, cursorPositionCallback); //Cursor input
-	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
-	glfwSetKeyCallback(window, key_callback); //Unused
-	
-	glfwSetKeyCallback(window, key_callback);
 
+
+	glfwSetKeyCallback(window, key_callback); 
 	glfwSetCursorEnterCallback(window, cursorEnterCallback);
 	glfwSetCursorPosCallback(window, cursorPositionCallback);
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //hides cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //hides cursor
 	
 	//View frustum
-	float ratio;
+	
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
-	ratio = width / static_cast<float>(height);
 	glViewport(0, 0, width, height);
 	
 
@@ -116,23 +109,30 @@ int main(void)
 		//updateInput(window, paddle);
 		
 		//Color
-	
-	
+		
+		
 		
 		//Drawing
 
-		glLoadIdentity();
+		//Ball
+		ball.setColours(0, 1, 0.5f);
 		ball.drawBall();
-		glLoadIdentity();
+
+		//Paddle
+		glColor4f(paddle.colour[0], paddle.colour[1], paddle.colour[2], 0.5f);
 		paddle.drawBox();
-		
-		
+
+
+		//Block colours
+		glColor3f(0, 1, 0.5f);
+
+	
 
 		//Iterator for drawing blocks.
 		//Popping blocks will cut them from being drawn.
 		for (Block block : blocks)
 		{
-			glLoadIdentity();
+		
 			block.drawBox();
 		}
 		if (blocks.empty())
@@ -146,8 +146,10 @@ int main(void)
 		glfwSwapBuffers(window);
 
 		/* Poll for and process events */
+		updatePaddlePos(window, paddle);
 		glfwPollEvents();
 
+		
 
 
 	}
@@ -158,16 +160,16 @@ int main(void)
 
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_SPACE) {
+	if (key == GLFW_KEY_ESCAPE) {
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		exit(EXIT_SUCCESS);
 	}
 }
 
-void cursorEnterCallback(GLFWwindow* window, int entered)
+static void cursorEnterCallback(GLFWwindow* window, int entered)
 {
 	if (entered)
 	{
@@ -181,18 +183,16 @@ void cursorEnterCallback(GLFWwindow* window, int entered)
 
 static void cursorPositionCallback(GLFWwindow* window, double x, double y)
 {
-	if (cursorActive)
-	{
-		float test = x * 0.5 + 0.5 + 0.5 / SCREEN_WIDTH;
-		std::cout << test << std::endl;
-	//	std::cout << x << ", " << y << std::endl;
-	}
-
-static void cursorPositionCallback(GLFWwindow* window, double xPos, double yPos)
-{
 	//Conversion from pixel co-ord to GL co-ord (-1 to 1)
 	//-0.5 to center the cursor/paddle on Y
 	//*2 to cover full -1 to 1 range
-	(*cursorXPos) = ((xPos / SCREENWIDTH) - 0.5f) * 2; 
+	(*cursorXPos) = ((x / SCREENWIDTH) - 0.5f) * 2; 
 
+}
+
+void updatePaddlePos(GLFWwindow* window, Paddle& paddle)
+{
+	if (cursorActive) {
+		paddle.setXPos(*cursorXPos);
+	}
 }

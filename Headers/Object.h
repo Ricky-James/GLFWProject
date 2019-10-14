@@ -19,6 +19,8 @@ public:
 	float width;
 	float height;
 
+	float colour[3];
+
 	void drawBox() const;
 };
 

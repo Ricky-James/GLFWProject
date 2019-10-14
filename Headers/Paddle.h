@@ -15,7 +15,9 @@ public:
 		pos.y = -0.875f;
 		width = 0.15f;
 		height = 0.02f;
-
+		colour[0] = 200;
+		colour[1] = 0;
+		colour[2] = 0;
 		
 	}
 

@@ -17,17 +17,6 @@ void Object::drawBox() const {
 	glVertex2f(BL.x, BL.y);
 
 
-	if (objectType == 0)
-	{
-		glColor3f(200, 0, 0);
-
-	}
-	else {
-		glColor3f(255, 255, 255);
-	}
-
-
-
 	glEnd();
 
 

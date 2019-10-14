@@ -16,12 +16,16 @@ private:
 	const float radius = 0.05f;
 	const float DEG2RAD = 3.14159 / 180;
 
+	float colours[3];
 
 public:
 	Ball()
 	{
 		pos.x = 0; pos.y = 0;
 		spd.x = 0; spd.y = 0;
+		colours[0] = 255;
+		colours[1] = 255;
+		colours[2] = 255;
 	}
 
 	float getxspeed() const { return spd.x; }
@@ -29,11 +33,22 @@ public:
 	float getxpos()   const { return pos.x; }
 	float getypos()   const { return pos.y; }
 
-	void moveLeft();
-	void moveRight();
-
 	//Draws ball to screen (+ position)
 	void drawBall() const;
+
+	void setColours(float r, float g, float b)
+	{
+		if (r >= 0 && r <= 1) {
+			colours[0] = r;
+		}
+		if (g >= 0 && g <= 1) {
+			colours[1] = g;
+		}
+		if (b >= 0 && b <= 1) {
+			colours[2] = b;
+		}
+
+	}
 	
 	
 };
