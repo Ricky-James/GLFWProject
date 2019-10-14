@@ -14,11 +14,6 @@ public:
 		
 	}
 
-	float getX();
-	float getY();
-
-	void drawBox() const;
 	
-
 };
 

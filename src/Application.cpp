@@ -1,4 +1,5 @@
 #include <GLFW/glfw3.h>
+#include <iostream> //for debug purposes
 
 //#include <Box2D/Box2D.h>
 #include <stdlib.h>
@@ -9,11 +10,13 @@
 #include "Headers/Paddle.h"
 #include "Headers/Block.h"
 
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 640
+
 
 //TO DO:
 //INPUT
 //PHYSICS
-//BUILD UPPER BLOCKS INTO VECTOR
 //LOOK INTO REPLACING PADDLE QUADS
 //3D?
 
@@ -25,6 +28,10 @@ void updateInput(GLFWwindow* window, Paddle &paddle)
 	}
 }
 
+bool cursorActive;
+
+void cursorEnterCallback(GLFWwindow* window, int entered);
+static void cursorPositionCallback(GLFWwindow* window, double x, double y);
 
 int main(void)
 {
@@ -40,7 +47,7 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(640, 640, "OpenGL Project", NULL, NULL);
+	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL Project", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -54,6 +61,10 @@ int main(void)
 
 	void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods);
 	glfwSetKeyCallback(window, key_callback);
+
+	glfwSetCursorEnterCallback(window, cursorEnterCallback);
+	glfwSetCursorPosCallback(window, cursorPositionCallback);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //hides cursor
 	
 	//View frustum
 	float ratio;
@@ -61,6 +72,7 @@ int main(void)
 	glfwGetFramebufferSize(window, &width, &height);
 	ratio = width / static_cast<float>(height);
 	glViewport(0, 0, width, height);
+	
 
 
 	Ball ball;
@@ -92,9 +104,6 @@ int main(void)
 		//Movement
 		
 		
-
-		//updateInput(window, paddle);
-		
 		//Color
 	
 	
@@ -108,7 +117,7 @@ int main(void)
 
 		//Iterator for drawing blocks.
 		//Popping blocks will cut them from being drawn.
-		for (Block &block : blocks)
+		for (Block block : blocks)
 		{
 			block.drawBox();
 		}
@@ -124,6 +133,9 @@ int main(void)
 
 		/* Poll for and process events */
 		glfwPollEvents();
+
+
+
 	}
 
 	glfwDestroyWindow(window);
@@ -135,7 +147,31 @@ int main(void)
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_SPACE) {
-		printf("Test");
+		glfwDestroyWindow(window);
+		glfwTerminate();
+		exit(EXIT_SUCCESS);
 	}
 }
 
+void cursorEnterCallback(GLFWwindow* window, int entered)
+{
+	if (entered)
+	{
+		cursorActive = true;
+		std::cout << "Entered" << std::endl;
+	}
+	else {
+		cursorActive = false;
+	}
+}
+
+static void cursorPositionCallback(GLFWwindow* window, double x, double y)
+{
+	if (cursorActive)
+	{
+		float test = x * 0.5 + 0.5 + 0.5 / SCREEN_WIDTH;
+		std::cout << test << std::endl;
+	//	std::cout << x << ", " << y << std::endl;
+	}
+
+}
