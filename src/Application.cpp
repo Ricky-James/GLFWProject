@@ -229,15 +229,15 @@ int main(void)
 
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
 			block.drawBox();
-			std::cout << "Pix Y: " << blocks[0].getX() << std::endl;
-			std::cout << "Box Y: " << blocks[0].pos.x << std::endl;
+			
+		//	std::cout << "Box Y: " << blocks[0].pos.y << std::endl;
 		}
 		if (blocks.empty())
 		{
 			//Win condition!
 		}
 		
-	
+		std::cout << "Pix Y: " << blocks[3].pos.y << std::endl;
 
 
 		/* Swap front and back buffers */
