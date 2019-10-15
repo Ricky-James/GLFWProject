@@ -15,6 +15,7 @@
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
 #define PPM 36 //Pixels per meter ratio for Box2D MKS conversion
+#define GRAVITY -0.02f
 
 //TO DO:
 //PHYSICS
@@ -77,20 +78,53 @@ int main(void)
 	glViewport(0, 0, width, height);
 	
 
-	//Create Box2D World
+	//**********START B2 INIT*************
+	b2Vec2 gravity(0.0f, GRAVITY);
+	b2World world(gravity);
+	world.SetWarmStarting(true);
+	world.SetContinuousPhysics(true);
 
-	b2Vec2 gravity(0.0f, -10.0f);
-	b2World* world = new b2World(gravity);
-	world->SetWarmStarting(true);
-	world->SetContinuousPhysics(true);
+	//Ground body setup
+	b2BodyDef groundBodyDef;
+	groundBodyDef.position.Set(0.0f, -10.0f);
+	b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
-	b2BodyDef* bodyDef = new b2BodyDef();
-	b2Body* groundBody = world->CreateBody(bodyDef);
+	b2PolygonShape groundBox;
+	groundBox.SetAsBox(50.0f, 10.0f);
 
+	groundBody->CreateFixture(&groundBox, 0.0f);
+
+	//Dynamic body (with mass) setup
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(0.0f, 15.0f);
+	b2Body* body = world.CreateBody(&bodyDef);
+
+	//Shape
+	b2PolygonShape dynamicBox;
+	dynamicBox.SetAsBox(1.0f, 1.0f); //w+h
+
+	//Fixture
+	b2FixtureDef fixtureDef; //new fixture
+	fixtureDef.shape = &dynamicBox; //attach shape & body
+	fixtureDef.density = 1.0f; //A dynamic body should have at least one fixture with non-zero density
+	fixtureDef.friction = 0.3f;
+	
+	body->CreateFixture(&fixtureDef);
+
+	float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
+
+	//Box2D suggests velo 8, pos 3. Fewer increases performances but accuracy suffers (box2d doc 2.4)
+	//Number of constraint iterations. completely unrelated to step count
+	int32 velocityIterations = 6;
+	int32 positionIterations = 2;
+	//**********END B2 INIT*************//BOX 2D INIT
+	
 
 	Ball ball;
 	Paddle paddle;
 	std::vector<Block> blocks;
+	Block blocky(0,0);
 
 	//Instantiate blocks
 	float xpos = -0.82f; //Starting co-ords
@@ -112,11 +146,25 @@ int main(void)
 	{
 		/* Setup view: */
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		
 		/* Render here */
+		
 		//Movement
+		//B2D Sample code
+		for (int32 i = 0; i < 60; ++i)
+		{
+			world.Step(timeStep, velocityIterations, positionIterations);
+			b2Vec2 position = body->GetPosition();
+			float32 angle = body->GetAngle();
+			blocky.pos.x = position.x / 10;
+			blocky.pos.y = position.y / 10;
+			blocky.drawBox();
+			printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+			
+		}
+
 		
-		
+
 
 		//updateInput(window, paddle);
 		
@@ -127,7 +175,7 @@ int main(void)
 		//Drawing
 
 		//Ball
-		ball.setColours(0, 1, 0.5f);
+		ball.setColours(1, 0.5f, 0.5f);
 		ball.drawBall();
 
 		//Paddle
