@@ -15,7 +15,7 @@
 
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
-#define PPM 36 //Pixels per meter ratio for Box2D MKS conversion
+#define PTM 5 //Pixels to meter ratio
 #define GRAVITY -0.02f
 
 //TO DO:
@@ -26,7 +26,7 @@
 
 bool* cursorActive = new bool();
 float* cursorXPos = new float();
-
+bool step = false;
 
 
 
@@ -96,42 +96,36 @@ int main(void)
 	b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
 	b2PolygonShape groundBox;
-	groundBox.SetAsBox(50.0f, 5.0f);
+	groundBox.SetAsBox(10.0f, 5.0f);
+	
 
 	groundBody->CreateFixture(&groundBox, 0.0f);
 
 	//Dynamic body (with mass) setup
-	b2BodyDef bodyDef;
+	/*b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(0.0f, 15.0f);
 	b2Body* body = world.CreateBody(&bodyDef);
-
-	b2BodyDef bodyDef2;
-	bodyDef2.type = b2_dynamicBody;
-	bodyDef2.position.Set(0.0f, 30.0f);
-	b2Body* body2 = world.CreateBody(&bodyDef2);
+*/
 
 
 	//Shape
-	b2PolygonShape dynamicBox;
-	dynamicBox.SetAsBox(1.0f, 1.0f); //w+h
-	b2PolygonShape dynamicBox2;
-	dynamicBox2.SetAsBox(1.0f, 1.0f); //w+h
+	//b2PolygonShape dynamicBox;
+	//dynamicBox.SetAsBox(1.2f, 0.2f); //w+h
+	//b2PolygonShape dynamicBox2;
+	//dynamicBox2.SetAsBox(1.2f, 0.2f); //w+h
 
 
 	//Fixture
-	b2FixtureDef fixtureDef; //new fixture
-	fixtureDef.shape = &dynamicBox; //attach shape & body
-	fixtureDef.density = 1.0f; //A dynamic body should have at least one fixture with non-zero density
-	fixtureDef.friction = 0.3f;
-	
-	b2FixtureDef fixtureDef2; //new fixture
-	fixtureDef2.shape = &dynamicBox2; //attach shape & body
-	fixtureDef2.density = 1.0f; //A dynamic body should have at least one fixture with non-zero density
-	fixtureDef2.friction = 0.3f;
+	//b2FixtureDef fixtureDef; //new fixture
+	//fixtureDef.shape = &dynamicBox; //attach shape & body
+	//fixtureDef.density = 1.0f; //A dynamic body should have at least one fixture with non-zero density
+	//fixtureDef.friction = 0.3f;
+	//
 
-	body->CreateFixture(&fixtureDef);
-	body2->CreateFixture(&fixtureDef2);
+
+	//body->CreateFixture(&fixtureDef);
+
 
 	float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
 
@@ -145,8 +139,6 @@ int main(void)
 	Ball ball;
 	Paddle paddle;
 	std::vector<Block> blocks;
-	Block blocky(0,0);
-	Block blocker(0, 0);
 
 	//Instantiate blocks
 	float xpos = -0.82f; //Starting co-ords
@@ -155,7 +147,7 @@ int main(void)
 	{
 		for (int n = 0; n < 5; n++) //Top to bottom
 		{
-			blocks.push_back(Block(xpos, ypos)); //Add to vector at current co-ords
+			blocks.push_back(Block(world, xpos, ypos)); //Add to vector at current co-ords
 			ypos -= 0.1f; //Reduce Y-coord for each iteration
 		}
 		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
@@ -174,10 +166,18 @@ int main(void)
 		
 		//Movement
 
+		//Frame advance debugging (R to step)
+		if (step)
+		{
+			world.Step(timeStep, velocityIterations, positionIterations);
+			step = false;
+		}
+		
+
 
 		//B2D Sample code
-		world.Step(timeStep, velocityIterations, positionIterations);
-
+		
+		/*
 		b2Vec2 position = body->GetPosition();
 		float32 angle = body->GetAngle();
 		blocky.pos.x = position.x / 10;
@@ -189,14 +189,13 @@ int main(void)
 
 		b2Vec2 position2 = body2->GetPosition();
 		float32 angle2 = body2->GetAngle();
-		blocker.pos.x = 0;
+		blocker.pos.x = position2.x / 10;
 		blocker.pos.y = position2.y / 10;
 		glColor3f(0, 1, 0.5f);
-		blocker.drawBox();
+		blocker.drawBox();*/
 
 		
-		printf("%4.2f %4.2f %4.2f\n", position2.x, position2.y, angle);
-
+	
 		//Color
 		
 		
@@ -222,12 +221,22 @@ int main(void)
 		for (Block block : blocks)
 		{
 		
+			
+			b2Vec2 pos = block.body->GetPosition();
+			float angle = block.body->GetAngle();
+			block.pos.x = pos.x * PTM;
+			block.pos.y = pos.y * PTM;
+
+			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
 			block.drawBox();
+			std::cout << "Pix Y: " << blocks[0].getX() << std::endl;
+			std::cout << "Box Y: " << blocks[0].pos.x << std::endl;
 		}
 		if (blocks.empty())
 		{
 			//Win condition!
 		}
+		
 	
 
 
@@ -255,6 +264,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		exit(EXIT_SUCCESS);
+	}
+
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) //Frame advance tool
+	{
+		step = true;
 	}
 }
 

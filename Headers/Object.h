@@ -6,6 +6,8 @@
 class Object
 {
 
+	
+
 public:
 	
 	struct Vector2 {
@@ -22,6 +24,10 @@ public:
 
 	float colour[3];
 
+	b2BodyDef bodyDef;
+	b2PolygonShape dynamicShape;
+	b2Body* body;
+	b2FixtureDef fixtureDef;
 
 
 	void drawBox() const;
