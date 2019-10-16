@@ -147,8 +147,12 @@ int main(void)
 	{
 		for (int n = 0; n < 5; n++) //Top to bottom
 		{
-			blocks.push_back(Block(world, xpos, ypos)); //Add to vector at current co-ords
+			blocks.push_back(Block(xpos, ypos)); //Add to vector at current co-ords
 			ypos -= 0.1f; //Reduce Y-coord for each iteration
+			//Attach fixture to body and body to world. 1.0f dens.
+			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
+			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
+
 		}
 		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
 		xpos += 0.27f; 
@@ -230,14 +234,14 @@ int main(void)
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
 			block.drawBox();
 			
-		//	std::cout << "Box Y: " << blocks[0].pos.y << std::endl;
+			printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, angle);
 		}
 		if (blocks.empty())
 		{
 			//Win condition!
 		}
 		
-		std::cout << "Pix Y: " << blocks[3].pos.y << std::endl;
+		
 
 
 		/* Swap front and back buffers */

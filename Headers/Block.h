@@ -5,8 +5,10 @@ class Block : public Object
 {
 private:
 	
+	b2PolygonShape kinematicShape;
+
 public:
-	Block(b2World &world, float x, float y) {
+	Block(float x, float y) {
 		objectType = 0;
 		pos.x = x;
 		pos.y = y;
@@ -18,13 +20,13 @@ public:
 
 		//B2D
 		bodyDef.position.Set(x/5, y/5);
-		bodyDef.type = b2_dynamicBody;
-		body = world.CreateBody(&bodyDef);
+		bodyDef.type = b2_kinematicBody; //Unaffected by gravity
+		
 		//Shape
-		dynamicShape.SetAsBox((width / 2)/5, (height / 2)/5);
+		kinematicShape.SetAsBox((width / 2)/5, (height / 2)/5);
 		//Fixture
-		body->CreateFixture(&dynamicShape, 1.0f); //Density
-		fixtureDef.shape = &dynamicShape; //Attach shape & body
+	//	body->CreateFixture(&dynamicShape, 1.0f); //Density
+		fixtureDef.shape = &kinematicShape; //Attach shape & body
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 
@@ -32,7 +34,9 @@ public:
 
 	float getX();
 	float getY();
-
+	b2PolygonShape getShape() {
+		return kinematicShape;
+	}
 	
 };
 
