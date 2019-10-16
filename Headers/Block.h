@@ -20,10 +20,10 @@ public:
 
 		//B2D
 		bodyDef.position.Set(x/5, y/5);
-		bodyDef.type = b2_kinematicBody; //Unaffected by gravity
+		bodyDef.type = b2_dynamicBody; //Unaffected by gravity
 		
 		//Shape
-		kinematicShape.SetAsBox((width / 2)/5, (height / 2)/5);
+		kinematicShape.SetAsBox(width /6, height /6); //idk why 6 still, inaccurate body.
 		//Fixture
 	//	body->CreateFixture(&dynamicShape, 1.0f); //Density
 		fixtureDef.shape = &kinematicShape; //Attach shape & body
@@ -34,7 +34,7 @@ public:
 
 	float getX();
 	float getY();
-	b2PolygonShape getShape() {
+	const b2PolygonShape getShape() {
 		return kinematicShape;
 	}
 	

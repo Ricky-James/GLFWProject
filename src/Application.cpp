@@ -138,6 +138,10 @@ int main(void)
 
 	Ball ball;
 	Paddle paddle;
+
+	paddle.body = world.CreateBody(&paddle.bodyDef);
+	paddle.body->CreateFixture(&paddle.getShape(), 1.0f);
+
 	std::vector<Block> blocks;
 
 	//Instantiate blocks
@@ -212,6 +216,9 @@ int main(void)
 
 		//Paddle
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
+		b2Vec2 paddlePos = paddle.body->GetPosition();
+		paddle.pos.x = paddlePos.x / 6;
+		paddle.pos.y = paddlePos.y / 6;
 		paddle.drawBox();
 
 
