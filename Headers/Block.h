@@ -11,8 +11,8 @@ public:
 	Block(float x, float y) {
 		pos.x = x;
 		pos.y = y;
-		width = 0.12f;
-		height = 0.02f;
+		width = 0.24f;
+		height = 0.04f;
 		colour[0] = 200;
 		colour[1] = 200;
 		colour[2] = 200;
@@ -22,14 +22,14 @@ public:
 		bodyDef.type = b2_dynamicBody; //Unaffected by gravity
 		
 		//Shape
-		dynamicShape.SetAsBox(width * 2, height * 2);
+		dynamicShape.SetAsBox(width / 2, height / 2);
 		//Fixture
 
 		fixtureDef.shape = &dynamicShape; //Attach shape & body
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 1.0f;
-
+		
 
 	}
 

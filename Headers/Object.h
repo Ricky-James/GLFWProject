@@ -13,6 +13,7 @@ public:
 
 
 	Vector2 pos;
+	float angle;
 	float width;
 	float height;
 
@@ -24,6 +25,6 @@ public:
 	b2FixtureDef fixtureDef;
 
 
-	void drawBox(b2Vec2 pos) const;
+	void drawBox(b2Vec2 pos);
 };
 

@@ -123,7 +123,7 @@ int main(void)
 
 	paddle.body = world.CreateBody(&paddle.bodyDef);
 	paddle.body->CreateFixture(&paddle.getShape(), 1.0f);
-	paddle.body->SetGravityScale(0.0f);
+	paddle.body->SetGravityScale(1.0f);
 	std::vector<Block> blocks;
 
 	//Instantiate blocks
@@ -138,6 +138,7 @@ int main(void)
 			//Attach fixture to body and body to world. 1.0f dens.
 			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
 			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
+			blocks.back().body->SetGravityScale(1.0f);
 
 		}
 		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
@@ -159,10 +160,9 @@ int main(void)
 		//Frame advance debugging (R to step)
 		if (step)
 		{
-			
-			//step = false;
+			world.Step(timeStep, velocityIterations, positionIterations);
 		}
-		world.Step(timeStep, velocityIterations, positionIterations);
+		
 
 		
 		//Drawing
@@ -183,8 +183,7 @@ int main(void)
 
 
 		//Debug messages:
-	//	std::cout << "Paddle X: " << paddle.bodyDef.position.x << std::endl;
-		std::cout << "Block 0Y " << blocks.at(0).body->GetPosition().y << std::endl;
+		std::cout << blocks.at(0).body->GetAngle() << std::endl;
 	
 
 		//Iterator for drawing blocks.
@@ -192,7 +191,7 @@ int main(void)
 		for (Block block : blocks)
 		{		
 			block.pos = box2glfw(block.body->GetPosition());
-			block.body->SetGravityScale(0.1f);
+			
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
 			block.drawBox(block.body->GetPosition());
 			
@@ -234,7 +233,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) //Frame advance tool
 	{
-		step = true;
+		step = !step;
 	}
 }
 
