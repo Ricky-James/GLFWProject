@@ -13,6 +13,8 @@ void Object::drawBox(b2Vec2 pos) const {
 	Vector2 BR = { pos.x + width, pos.y - height };
 	Vector2 BL = { pos.x - width, pos.y - height };
 
+	
+
 	glBegin(GL_QUADS); //Top left, clockwise
 
 	glVertex2f(TL.x, TL.y);
@@ -20,7 +22,9 @@ void Object::drawBox(b2Vec2 pos) const {
 	glVertex2f(BR.x, BR.y);
 	glVertex2f(BL.x, BL.y);
 
-	glRotatef(bodyDef.angle, 0, 0, 0);
+	glRotatef(body->GetAngle() * 0.017f, pos.x, pos.y, 0); //Angle still dysfunctional
+
+	glVertex2f(body->GetWorldVector);
 
 	glEnd();
 

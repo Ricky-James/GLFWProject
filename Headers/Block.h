@@ -22,7 +22,7 @@ public:
 		bodyDef.type = b2_dynamicBody; //Unaffected by gravity
 		
 		//Shape
-		dynamicShape.SetAsBox(width, height);
+		dynamicShape.SetAsBox(width * 2, height * 2);
 		//Fixture
 
 		fixtureDef.shape = &dynamicShape; //Attach shape & body

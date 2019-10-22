@@ -123,7 +123,7 @@ int main(void)
 
 	paddle.body = world.CreateBody(&paddle.bodyDef);
 	paddle.body->CreateFixture(&paddle.getShape(), 1.0f);
-
+	paddle.body->SetGravityScale(0.0f);
 	std::vector<Block> blocks;
 
 	//Instantiate blocks
@@ -192,7 +192,7 @@ int main(void)
 		for (Block block : blocks)
 		{		
 			block.pos = box2glfw(block.body->GetPosition());
-			
+			block.body->SetGravityScale(0.1f);
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
 			block.drawBox(block.body->GetPosition());
 			

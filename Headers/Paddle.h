@@ -29,6 +29,7 @@ public:
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 1.0f;
+
 	
 	}
 	
