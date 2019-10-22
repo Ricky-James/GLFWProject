@@ -11,6 +11,7 @@ class Object
 public:
 
 
+
 	Vector2 pos;
 	float width;
 	float height;
@@ -23,6 +24,6 @@ public:
 	b2FixtureDef fixtureDef;
 
 
-	void drawBox() const;
+	void drawBox(b2Vec2 pos) const;
 };
 

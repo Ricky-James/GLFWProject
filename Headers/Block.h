@@ -18,16 +18,18 @@ public:
 		colour[2] = 200;
 
 		//B2D
-		bodyDef.position.Set(x/5, y/5);
+		bodyDef.position.Set(x, y);
 		bodyDef.type = b2_dynamicBody; //Unaffected by gravity
 		
 		//Shape
-		dynamicShape.SetAsBox(width /6, height /6); //idk why 6 still, inaccurate body.
+		dynamicShape.SetAsBox(width, height);
 		//Fixture
-	//	body->CreateFixture(&dynamicShape, 1.0f); //Density
+
 		fixtureDef.shape = &dynamicShape; //Attach shape & body
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
+		fixtureDef.restitution = 1.0f;
+
 
 	}
 

@@ -92,49 +92,26 @@ int main(void)
 	world.SetContinuousPhysics(true);
 
 
-	//Ground body setup
-	b2BodyDef groundBodyDef;
-	groundBodyDef.type = b2_staticBody;
-	groundBodyDef.position.Set(0.0f, -10.0f);
-	b2Body* groundBody = world.CreateBody(&groundBodyDef);
+	////Ground body setup
+	//b2BodyDef groundBodyDef;
+	//groundBodyDef.type = b2_staticBody;
+	//groundBodyDef.position.Set(0.0f, -10.0f);
+	//b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
-	b2PolygonShape groundBox;
-	groundBox.SetAsBox(10.0f, 1.0f); //(w,h)
-	
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &groundBox;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
-
-	groundBody->CreateFixture(&groundBox, 1.0f);
-
-	//Dynamic body (with mass) setup
-	/*b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(0.0f, 15.0f);
-	b2Body* body = world.CreateBody(&bodyDef);
-*/
-
-
-	//Shape
-	//b2PolygonShape dynamicBox;
-	//dynamicBox.SetAsBox(1.2f, 0.2f); //w+h
-
-
-	//Fixture
-	//b2FixtureDef fixtureDef; //new fixture
-	//fixtureDef.shape = &dynamicBox; //attach shape & body
-	//fixtureDef.density = 1.0f; //A dynamic body should have at least one fixture with non-zero density
-	//fixtureDef.friction = 0.3f;
+	//b2PolygonShape groundBox;
+	//groundBox.SetAsBox(10.0f, 1.0f); //(w,h)
 	//
+	//b2FixtureDef fixtureDef;
+	//fixtureDef.shape = &groundBox;
+	//fixtureDef.density = 1.0f;
+	//fixtureDef.friction = 0.3f;
 
-
-	//body->CreateFixture(&fixtureDef);
+	//groundBody->CreateFixture(&groundBox, 1.0f);
 
 
 	float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
 
-	//Box2D suggests velo 8, pos 3. Fewer increases performances but accuracy suffers (box2d doc 2.4)
+	//Box2D suggests velo 8 or 6, pos 3 or 2. Fewer increases performances but accuracy suffers (box2d doc 2.4)
 	//Number of constraint iterations. completely unrelated to step count
 	int32 velocityIterations = 6;
 	int32 positionIterations = 2;
@@ -182,36 +159,11 @@ int main(void)
 		//Frame advance debugging (R to step)
 		if (step)
 		{
-			world.Step(timeStep, velocityIterations, positionIterations);
+			
 			//step = false;
 		}
-		
+		world.Step(timeStep, velocityIterations, positionIterations);
 
-
-		//B2D Sample code
-		
-		/*
-		b2Vec2 position = body->GetPosition();
-		float32 angle = body->GetAngle();
-		blocky.pos.x = position.x / 10;
-		blocky.pos.y = position.y / 10;
-		blocky.drawBox();
-		printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
-		
-
-
-		b2Vec2 position2 = body2->GetPosition();
-		float32 angle2 = body2->GetAngle();
-		blocker.pos.x = position2.x / 10;
-		blocker.pos.y = position2.y / 10;
-		glColor3f(0, 1, 0.5f);
-		blocker.drawBox();*/
-
-		
-	
-		//Color
-		
-		
 		
 		//Drawing
 
@@ -221,25 +173,28 @@ int main(void)
 
 		//Paddle
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
-		b2Vec2 paddlePos = paddle.body->GetPosition();
-		paddle.pos.y = box2glfw(paddlePos).y;
+		paddle.pos.y = box2glfw(paddle.body->GetPosition()).y;
 		paddle.bodyDef.position = glfw2box(paddle.getPos());
-		paddle.drawBox();
+		paddle.drawBox(paddle.body->GetPosition());
 
 
 		//Block colours
 		glColor3f(0, 1, 0.5f);
 
+
+		//Debug messages:
+	//	std::cout << "Paddle X: " << paddle.bodyDef.position.x << std::endl;
+		std::cout << "Block 0Y " << blocks.at(0).body->GetPosition().y << std::endl;
 	
 
 		//Iterator for drawing blocks.
 		//Popping blocks will cut them from being drawn.
 		for (Block block : blocks)
 		{		
-			b2Vec2 boxPos = block.body->GetPosition();	
-			block.pos = box2glfw(boxPos);
+			block.pos = box2glfw(block.body->GetPosition());
+			
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
-			block.drawBox();
+			block.drawBox(block.body->GetPosition());
 			
 		//	printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, angle);
 		}
@@ -306,31 +261,27 @@ static void cursorPositionCallback(GLFWwindow* window, double x, double y)
 
 void updatePaddlePos(GLFWwindow* window, Paddle& paddle)
 {
+	//Update xpos of both glfw and b2body
 	if (cursorActive) {
 		paddle.setXPos(*cursorXPos);
 	}
 }
 
-Vector2 box2glfw(b2Vec2 boxPos)
+Vector2 box2glfw(b2Vec2 boxPos) //Vector conversion
 {
 	Vector2 newPos;
-	std::cout << "box Y: " << boxPos.y << std::endl;
-	
-	newPos.x = boxPos.x * 5;
-	newPos.y = boxPos.y * 5;
 
-	std::cout << "new Y: " << newPos.y << std::endl;
+	newPos.x = boxPos.x;
+	newPos.y = boxPos.y;
+
 	return newPos;
 }
 
-b2Vec2 glfw2box(Vector2 glfwPos)
+b2Vec2 glfw2box(Vector2 glfwPos) //Vector conversion
 {
 	//DISFUNCTIONAL
 	b2Vec2 newPos;
-
-	std::cout << "glfw Y: " << glfwPos.y << std::endl;
-	newPos.x = ((glfwPos.x * SCREENWIDTH) - 0.5f) * 2;
-	newPos.y = ((glfwPos.y * SCREENWIDTH) - 0.5f) * 2;
-	std::cout << "new Y: " << newPos.y << std::endl;
+	newPos.x = glfwPos.x;
+	newPos.y = glfwPos.y;
 	return newPos;
 }

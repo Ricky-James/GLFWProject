@@ -13,6 +13,7 @@ private:
 
 	Vector2 pos, spd;
 	
+
 	const float radius = 0.05f;
 	const float DEG2RAD = 3.14159 / 180;
 
