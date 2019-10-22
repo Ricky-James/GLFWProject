@@ -1,7 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <Box2D/Box2D.h>
-
+#include "Vector2.h"
 
 class Object
 {
@@ -9,15 +9,8 @@ class Object
 	
 
 public:
-	
-	struct Vector2 {
-	public:
-		float x, y;
-	};
 
-	//0 = Destroyable
-	//1 = Paddle
-	int objectType;
+
 	Vector2 pos;
 	float width;
 	float height;

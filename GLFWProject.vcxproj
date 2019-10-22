@@ -151,6 +151,7 @@
     <ClInclude Include="Headers\Ball.h" />
     <ClInclude Include="Headers\Object.h" />
     <ClInclude Include="Headers\Paddle.h" />
+    <ClInclude Include="Headers\Vector2.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

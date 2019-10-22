@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <vector>
-#include <thread>
+#include "Headers/Vector2.h"
 #include "Headers/Ball.h"
 #include "Headers/Paddle.h"
 #include "Headers/Block.h"
@@ -36,11 +36,12 @@ static void cursorPositionCallback(GLFWwindow* window, double x, double y);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void updatePaddlePos(GLFWwindow* window, Paddle& paddle);
 
+Vector2 box2glfw(b2Vec2 boxPos);
+b2Vec2 glfw2box(Vector2 glfwPos);
+
 int main(void)
 {
 
-
-	
 	GLFWwindow* window;
 	
 	/* Initialize the library */
@@ -90,16 +91,22 @@ int main(void)
 	world.SetWarmStarting(true);
 	world.SetContinuousPhysics(true);
 
+
 	//Ground body setup
 	b2BodyDef groundBodyDef;
+	groundBodyDef.type = b2_staticBody;
 	groundBodyDef.position.Set(0.0f, -10.0f);
 	b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
 	b2PolygonShape groundBox;
-	groundBox.SetAsBox(10.0f, 5.0f);
+	groundBox.SetAsBox(10.0f, 1.0f); //(w,h)
 	
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &groundBox;
+	fixtureDef.density = 1.0f;
+	fixtureDef.friction = 0.3f;
 
-	groundBody->CreateFixture(&groundBox, 0.0f);
+	groundBody->CreateFixture(&groundBox, 1.0f);
 
 	//Dynamic body (with mass) setup
 	/*b2BodyDef bodyDef;
@@ -112,8 +119,6 @@ int main(void)
 	//Shape
 	//b2PolygonShape dynamicBox;
 	//dynamicBox.SetAsBox(1.2f, 0.2f); //w+h
-	//b2PolygonShape dynamicBox2;
-	//dynamicBox2.SetAsBox(1.2f, 0.2f); //w+h
 
 
 	//Fixture
@@ -178,7 +183,7 @@ int main(void)
 		if (step)
 		{
 			world.Step(timeStep, velocityIterations, positionIterations);
-			step = false;
+			//step = false;
 		}
 		
 
@@ -217,8 +222,8 @@ int main(void)
 		//Paddle
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
 		b2Vec2 paddlePos = paddle.body->GetPosition();
-		paddle.pos.x = paddlePos.x / 6;
-		paddle.pos.y = paddlePos.y / 6;
+		paddle.pos.y = box2glfw(paddlePos).y;
+		paddle.bodyDef.position = glfw2box(paddle.getPos());
 		paddle.drawBox();
 
 
@@ -230,18 +235,13 @@ int main(void)
 		//Iterator for drawing blocks.
 		//Popping blocks will cut them from being drawn.
 		for (Block block : blocks)
-		{
-		
-			
-			b2Vec2 pos = block.body->GetPosition();
-			float angle = block.body->GetAngle();
-			block.pos.x = pos.x * PTM;
-			block.pos.y = pos.y * PTM;
-
+		{		
+			b2Vec2 boxPos = block.body->GetPosition();	
+			block.pos = box2glfw(boxPos);
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
 			block.drawBox();
 			
-			printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, angle);
+		//	printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, angle);
 		}
 		if (blocks.empty())
 		{
@@ -309,4 +309,28 @@ void updatePaddlePos(GLFWwindow* window, Paddle& paddle)
 	if (cursorActive) {
 		paddle.setXPos(*cursorXPos);
 	}
+}
+
+Vector2 box2glfw(b2Vec2 boxPos)
+{
+	Vector2 newPos;
+	std::cout << "box Y: " << boxPos.y << std::endl;
+	
+	newPos.x = boxPos.x * 5;
+	newPos.y = boxPos.y * 5;
+
+	std::cout << "new Y: " << newPos.y << std::endl;
+	return newPos;
+}
+
+b2Vec2 glfw2box(Vector2 glfwPos)
+{
+	//DISFUNCTIONAL
+	b2Vec2 newPos;
+
+	std::cout << "glfw Y: " << glfwPos.y << std::endl;
+	newPos.x = ((glfwPos.x * SCREENWIDTH) - 0.5f) * 2;
+	newPos.y = ((glfwPos.y * SCREENWIDTH) - 0.5f) * 2;
+	std::cout << "new Y: " << newPos.y << std::endl;
+	return newPos;
 }

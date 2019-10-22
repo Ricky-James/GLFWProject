@@ -5,11 +5,10 @@ class Block : public Object
 {
 private:
 	
-	b2PolygonShape kinematicShape;
+	b2PolygonShape dynamicShape;
 
 public:
 	Block(float x, float y) {
-		objectType = 0;
 		pos.x = x;
 		pos.y = y;
 		width = 0.12f;
@@ -23,10 +22,10 @@ public:
 		bodyDef.type = b2_dynamicBody; //Unaffected by gravity
 		
 		//Shape
-		kinematicShape.SetAsBox(width /6, height /6); //idk why 6 still, inaccurate body.
+		dynamicShape.SetAsBox(width /6, height /6); //idk why 6 still, inaccurate body.
 		//Fixture
 	//	body->CreateFixture(&dynamicShape, 1.0f); //Density
-		fixtureDef.shape = &kinematicShape; //Attach shape & body
+		fixtureDef.shape = &dynamicShape; //Attach shape & body
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 
@@ -35,7 +34,7 @@ public:
 	float getX();
 	float getY();
 	const b2PolygonShape getShape() {
-		return kinematicShape;
+		return dynamicShape;
 	}
 	
 };

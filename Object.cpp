@@ -16,6 +16,7 @@ void Object::drawBox() const {
 	glVertex2f(BR.x, BR.y);
 	glVertex2f(BL.x, BL.y);
 
+	glRotatef(bodyDef.angle, 0, 0, 0);
 
 	glEnd();
 
