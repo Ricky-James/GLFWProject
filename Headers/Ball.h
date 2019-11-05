@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <math.h>
 #include <Box2D/Box2D.h>
+#include <string>
 
 class Ball 
 {
@@ -24,7 +25,8 @@ private:
 	b2FixtureDef fixtureDef;
 	b2CircleShape circleShape;
 	
-
+	std::string name;
+	
 	
 
 public:
@@ -34,6 +36,8 @@ public:
 
 	Ball()
 	{
+		name = "Ball";
+
 		pos.x = 0; pos.y = 0;
 		spd.x = 0; spd.y = 0;
 		colours[0] = 255;
@@ -44,6 +48,7 @@ public:
 		bodyDef.type = b2_dynamicBody;
 		bodyDef.linearDamping = 1.0f;
 		bodyDef.angularDamping = 1.0f;
+
 
 		circleShape.m_p.Set(0, 0); //Position relative to body
 		circleShape.m_radius = radius;

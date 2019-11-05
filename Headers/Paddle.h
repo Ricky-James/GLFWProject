@@ -11,6 +11,7 @@ public:
 
 	Paddle() //Mostly see block constructor for comments
 	{
+		setName("Paddle");
 		pos.x = 0.f;
 		pos.y = -0.875f;
 		width = 0.3f; //half of actual width

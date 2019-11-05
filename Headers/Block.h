@@ -9,6 +9,7 @@ private:
 
 public:
 	Block(float x, float y) {
+
 		pos.x = x;
 		pos.y = y;
 		width = 0.24f;
@@ -37,6 +38,15 @@ public:
 
 	float getX();
 	float getY();
+
+	void setName(std::string _name, int count)
+	{
+		assert(_name.length() > 0);
+		assert(count >= 0);
+		_name.append(std::to_string(count));
+		Object::setName(_name);
+
+	}
 
 	const b2PolygonShape getShape() {
 		return shape;

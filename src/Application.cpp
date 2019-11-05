@@ -10,17 +10,12 @@
 #include "Headers/Ball.h"
 #include "Headers/Paddle.h"
 #include "Headers/Block.h"
+#include "Headers/Collision.h"
 
 #include <iostream>
 
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
-
-
-//TO DO:
-//PHYSICS
-//LOOK INTO REPLACING PADDLE QUADS
-//3D?
 
 
 bool* cursorActive = new bool();
@@ -93,6 +88,9 @@ int main(void)
 	world->SetWarmStarting(true);
 	world->SetContinuousPhysics(true);
 
+	//b2Contact Listener for collision detection
+	Collision *collider = new Collision();
+	world->SetContactListener(collider);
 
 	////Ground body setup
 	//b2BodyDef groundBodyDef;
@@ -240,6 +238,7 @@ void drawBlocks(std::vector<Block> &blocks, b2World &world)
 {
 	float xpos = -0.82f; //Starting co-ords
 	float ypos = 0.95f;
+	int count = 0;
 	for (int i = 0; i < 7; i++) //Iterating left to right
 	{
 		for (int n = 0; n < 5; n++) //Top to bottom
@@ -250,6 +249,9 @@ void drawBlocks(std::vector<Block> &blocks, b2World &world)
 			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
 			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
 			blocks.back().body->SetGravityScale(1.0f);
+			blocks.back().setName("Block", count);
+			std::cout << blocks.back().getName() << std::endl;
+			count++;
 
 		}
 		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
