@@ -25,18 +25,21 @@ private:
 	b2FixtureDef fixtureDef;
 	b2CircleShape circleShape;
 	
-	std::string name;
-	
+	struct Userdata {
+		int name;
+	};
 	
 
 public:
 
 	b2BodyDef bodyDef;
 	b2Body* body;
+	bool contacting;
+	Userdata* data = new Userdata();
 
 	Ball()
 	{
-		name = "Ball";
+		data->name = 1;
 
 		pos.x = 0; pos.y = 0;
 		spd.x = 0; spd.y = 0;
@@ -58,7 +61,7 @@ public:
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 10.0f;
 
-		
+	//	body->SetUserData((void*)data);
 	}
 
 	float getxspeed() const { return spd.x; }
@@ -79,6 +82,10 @@ public:
 	{
 		body->ApplyForce(force, body->GetPosition(), true);
 	}
+
+	void startContact() { contacting = true; }
+
+	void endContact() { contacting = false; }
 
 	
 };

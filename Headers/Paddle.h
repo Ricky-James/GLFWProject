@@ -30,7 +30,7 @@ public:
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 10.0f;
 
-	
+
 	}
 	
 

@@ -17,7 +17,7 @@ void Ball::drawBall() const {
 
 void Ball::setPos(b2Vec2 b2pos)
 {
-	//TODO: Set >-1 <1 checks;
+	//TODO: Set >-1 <1 checks/collision
 	pos.x = b2pos.x;
 	pos.y = b2pos.y;
 }

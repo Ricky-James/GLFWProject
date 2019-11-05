@@ -20,7 +20,7 @@ public:
 
 		//B2D
 		bodyDef.position.Set(x, y);
-		bodyDef.type = b2_staticBody; //Unaffected by gravity
+		bodyDef.type = b2_kinematicBody; //Unaffected by gravity
 		
 		//Shape
 		shape.SetAsBox(width / 2, height / 2);

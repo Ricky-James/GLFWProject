@@ -163,6 +163,10 @@ int main(void)
 
 
 		ball.drawBall();
+		if (ball.contacting)
+		{
+			ball.setColours(0.5f, 1.0f, 1.0f);
+		}
 
 		//Paddle
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
@@ -229,7 +233,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 	{
-		ball.ballToPaddle(b2Vec2(0.0f, 5.0f));
+		ball.ballToPaddle(b2Vec2(0.0f, 3.0f));
 	}	
 
 }
