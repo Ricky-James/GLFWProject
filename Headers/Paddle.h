@@ -5,7 +5,6 @@ class Paddle : public Object
 {
 private:
 
-	b2PolygonShape kinematicShape;
 
 
 public:
@@ -23,12 +22,12 @@ public:
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_kinematicBody;
 
-		kinematicShape.SetAsBox(width/2, height/2);
+		shape.SetAsBox(width/2, height/2);
 
-		fixtureDef.shape = &kinematicShape;
+		fixtureDef.shape = &shape;
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
-		fixtureDef.restitution = 1.0f;
+		fixtureDef.restitution = 10.0f;
 
 	
 	}
@@ -38,7 +37,7 @@ public:
 
 
 	const b2PolygonShape getShape() {
-		return kinematicShape;
+		return shape;
 	}
 	const Vector2 getPos()
 	{

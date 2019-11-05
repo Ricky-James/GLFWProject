@@ -14,3 +14,24 @@ void Ball::drawBall() const {
 
 	glEnd();
 }
+
+void Ball::setPos(b2Vec2 b2pos)
+{
+	//TODO: Set >-1 <1 checks;
+	pos.x = b2pos.x;
+	pos.y = b2pos.y;
+}
+
+void Ball::setColours(float r, float g, float b)
+{
+	if (r >= 0 && r <= 1) {
+		colours[0] = r;
+	}
+	if (g >= 0 && g <= 1) {
+		colours[1] = g;
+	}
+	if (b >= 0 && b <= 1) {
+		colours[2] = b;
+	}
+
+}

@@ -23,6 +23,7 @@ public:
 	
 	b2Body* body;
 	b2FixtureDef fixtureDef;
+	b2PolygonShape shape;
 
 
 	void drawBox(b2Vec2 pos);

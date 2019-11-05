@@ -1,6 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <math.h>
+#include <Box2D/Box2D.h>
 
 class Ball 
 {
@@ -19,7 +20,18 @@ private:
 
 	float colours[3];
 
+
+	b2FixtureDef fixtureDef;
+	b2CircleShape circleShape;
+	
+
+	
+
 public:
+
+	b2BodyDef bodyDef;
+	b2Body* body;
+
 	Ball()
 	{
 		pos.x = 0; pos.y = 0;
@@ -27,6 +39,21 @@ public:
 		colours[0] = 255;
 		colours[1] = 255;
 		colours[2] = 255;
+
+		bodyDef.position.Set(pos.x, pos.y);
+		bodyDef.type = b2_dynamicBody;
+		bodyDef.linearDamping = 1.0f;
+		bodyDef.angularDamping = 1.0f;
+
+		circleShape.m_p.Set(0, 0); //Position relative to body
+		circleShape.m_radius = radius;
+
+		fixtureDef.shape = &circleShape;
+		fixtureDef.density = 1.0f;
+		fixtureDef.friction = 0.3f;
+		fixtureDef.restitution = 10.0f;
+
+		
 	}
 
 	float getxspeed() const { return spd.x; }
@@ -36,21 +63,18 @@ public:
 
 	//Draws ball to screen (+ position)
 	void drawBall() const;
+	void setPos(b2Vec2 b2pos);
+	void setColours(float r, float g, float b);
 
-	void setColours(float r, float g, float b)
-	{
-		if (r >= 0 && r <= 1) {
-			colours[0] = r;
-		}
-		if (g >= 0 && g <= 1) {
-			colours[1] = g;
-		}
-		if (b >= 0 && b <= 1) {
-			colours[2] = b;
-		}
-
+	const b2CircleShape getShape() {
+		return circleShape;
 	}
-	
+
+	void ballToPaddle(b2Vec2 force)
+	{
+		body->ApplyForce(force, body->GetPosition(), true);
+	}
+
 	
 };
 

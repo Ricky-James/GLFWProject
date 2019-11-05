@@ -15,8 +15,7 @@
 
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
-#define PTM 5 //Pixels to meter ratio
-#define GRAVITY -0.02f
+
 
 //TO DO:
 //PHYSICS
@@ -27,6 +26,9 @@
 bool* cursorActive = new bool();
 float* cursorXPos = new float();
 bool step = false;
+Ball ball;
+
+void drawBlocks(std::vector<Block> &blocks, b2World &world);
 
 
 
@@ -86,10 +88,10 @@ int main(void)
 	
 
 	//**********START B2 INIT*************
-	b2Vec2 gravity(0.0f, -10.0);
-	b2World world(gravity);
-	world.SetWarmStarting(true);
-	world.SetContinuousPhysics(true);
+	b2Vec2 gravity(0.0f, -9.8f);
+	b2World* world = new b2World(gravity);
+	world->SetWarmStarting(true);
+	world->SetContinuousPhysics(true);
 
 
 	////Ground body setup
@@ -113,37 +115,27 @@ int main(void)
 
 	//Box2D suggests velo 8 or 6, pos 3 or 2. Fewer increases performances but accuracy suffers (box2d doc 2.4)
 	//Number of constraint iterations. completely unrelated to step count
-	int32 velocityIterations = 6;
-	int32 positionIterations = 2;
+	int32 velocityIterations = 8;
+	int32 positionIterations = 3;
 	//**********END B2 INIT*************//BOX 2D INIT
 	
 
-	Ball ball;
+	
+	ball.body = world->CreateBody(&ball.bodyDef);
+	ball.body->CreateFixture(&ball.getShape(), 1.0f);
+	ball.body->SetGravityScale(1.0f);
+
+
 	Paddle paddle;
 
-	paddle.body = world.CreateBody(&paddle.bodyDef);
+	paddle.body = world->CreateBody(&paddle.bodyDef);
 	paddle.body->CreateFixture(&paddle.getShape(), 1.0f);
 	paddle.body->SetGravityScale(1.0f);
 	std::vector<Block> blocks;
 
 	//Instantiate blocks
-	float xpos = -0.82f; //Starting co-ords
-	float ypos = 0.95f;
-	for (int i = 0; i < 7; i++) //Iterating left to right
-	{
-		for (int n = 0; n < 5; n++) //Top to bottom
-		{
-			blocks.push_back(Block(xpos, ypos)); //Add to vector at current co-ords
-			ypos -= 0.1f; //Reduce Y-coord for each iteration
-			//Attach fixture to body and body to world. 1.0f dens.
-			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
-			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
-			blocks.back().body->SetGravityScale(1.0f);
+	drawBlocks(blocks, *world);
 
-		}
-		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
-		xpos += 0.27f; 
-	}
 	
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -160,7 +152,7 @@ int main(void)
 		//Frame advance debugging (R to step)
 		if (step)
 		{
-			world.Step(timeStep, velocityIterations, positionIterations);
+			world->Step(timeStep, velocityIterations, positionIterations);
 		}
 		
 
@@ -169,6 +161,9 @@ int main(void)
 
 		//Ball
 		ball.setColours(1, 0.5f, 0.5f);
+		ball.setPos(ball.body->GetPosition());
+
+
 		ball.drawBall();
 
 		//Paddle
@@ -183,8 +178,9 @@ int main(void)
 
 
 		//Debug messages:
-		std::cout << blocks.at(0).body->GetAngle() << std::endl;
-	
+	//	std::cout << blocks.at(0).body->GetAngle() << std::endl;
+		std::cout << ball.body->GetPosition().y << std::endl;
+
 
 		//Iterator for drawing blocks.
 		//Popping blocks will cut them from being drawn.
@@ -202,9 +198,6 @@ int main(void)
 			//Win condition!
 		}
 		
-		
-
-
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
@@ -213,10 +206,10 @@ int main(void)
 		updatePaddlePos(window, paddle);
 		glfwPollEvents();
 
-	
-
 	}
 
+	delete[] world;
+	world = NULL;
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
@@ -235,7 +228,36 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	{
 		step = !step;
 	}
+
+	if (key == GLFW_KEY_T && action == GLFW_PRESS)
+	{
+		ball.ballToPaddle(b2Vec2(0.0f, 5.0f));
+	}	
+
 }
+
+void drawBlocks(std::vector<Block> &blocks, b2World &world)
+{
+	float xpos = -0.82f; //Starting co-ords
+	float ypos = 0.95f;
+	for (int i = 0; i < 7; i++) //Iterating left to right
+	{
+		for (int n = 0; n < 5; n++) //Top to bottom
+		{
+			blocks.push_back(Block(xpos, ypos)); //Add to vector at current co-ords
+			ypos -= 0.1f; //Reduce Y-coord for each iteration
+			//Attach fixture to body and body to world. 1.0f dens.
+			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
+			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
+			blocks.back().body->SetGravityScale(1.0f);
+
+		}
+		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
+		xpos += 0.27f;
+	}
+
+}
+
 
 static void cursorEnterCallback(GLFWwindow* window, int entered)
 {

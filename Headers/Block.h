@@ -5,7 +5,7 @@ class Block : public Object
 {
 private:
 	
-	b2PolygonShape dynamicShape;
+	
 
 public:
 	Block(float x, float y) {
@@ -19,24 +19,27 @@ public:
 
 		//B2D
 		bodyDef.position.Set(x, y);
-		bodyDef.type = b2_dynamicBody; //Unaffected by gravity
+		bodyDef.type = b2_staticBody; //Unaffected by gravity
 		
 		//Shape
-		dynamicShape.SetAsBox(width / 2, height / 2);
+		shape.SetAsBox(width / 2, height / 2);
+
 		//Fixture
 
-		fixtureDef.shape = &dynamicShape; //Attach shape & body
+		fixtureDef.shape = &shape; //Attach shape & body
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 1.0f;
+		bodyDef.linearDamping = 1.0f;
 		
 
 	}
 
 	float getX();
 	float getY();
+
 	const b2PolygonShape getShape() {
-		return dynamicShape;
+		return shape;
 	}
 	
 };
