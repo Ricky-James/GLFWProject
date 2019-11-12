@@ -17,14 +17,15 @@
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
 
+//Used in input callbacks
+bool* g_cursorActive = new bool();
+float* g_cursorXPos = new float();
 
-bool* cursorActive = new bool();
-float* cursorXPos = new float();
+//Just for debugging really
 bool step = false;
 Ball ball;
 
-void drawBlocks(std::vector<Block> &blocks, b2World &world);
-
+void createBlocks(std::vector<Block> &blocks, b2World &world);
 
 
 //Input callbacks
@@ -126,13 +127,30 @@ int main(void)
 
 	Paddle paddle;
 
+	std::vector<Block> walls;
+	walls.push_back(Block(-1, 0, 0.05f, 2.0f ));
+	walls.push_back(Block(1 , 0, 0.05f, 2.0f ));
+	walls.push_back(Block(0 , 1, 2.0f , 0.05f));
+	walls.push_back(Block(0 , -1, 2.0f , 0.05f));
+	for (std::vector<Block>::iterator itr = walls.begin(); itr != walls.end(); itr++)
+	{
+		int index = std::distance(walls.begin(), itr);
+		Block *currentWall = &walls.at(index);
+		currentWall->setName("Wall", std::distance(walls.begin(), itr + 1));
+		currentWall->body = world->CreateBody(&currentWall->bodyDef);
+		currentWall->body->CreateFixture(&currentWall->getShape(), 1.0f);
+		currentWall->body->SetGravityScale(1.0f);
+	}
+
+
+
 	paddle.body = world->CreateBody(&paddle.bodyDef);
 	paddle.body->CreateFixture(&paddle.getShape(), 1.0f);
 	paddle.body->SetGravityScale(1.0f);
 	std::vector<Block> blocks;
 
 	//Instantiate blocks
-	drawBlocks(blocks, *world);
+	createBlocks(blocks, *world);
 
 	
 	/* Loop until the user closes the window */
@@ -180,9 +198,14 @@ int main(void)
 
 
 		//Debug messages:
-	//	std::cout << blocks.at(0).body->GetAngle() << std::endl;
-		std::cout << ball.body->GetPosition().y << std::endl;
+		std::cout << "Ball Y pos: " << ball.body->GetPosition().y << std::endl;
 
+		for (Block wall : walls)
+		{
+			
+		//	wall.pos = box2glfw(wall.body->GetPosition());
+			wall.drawBox(glfw2box(wall.pos)); //unnecessary to draw, drawing for debug purposes
+		}
 
 		//Iterator for drawing blocks.
 		//Popping blocks will cut them from being drawn.
@@ -238,16 +261,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 }
 
-void drawBlocks(std::vector<Block> &blocks, b2World &world)
+void createBlocks(std::vector<Block> &blocks, b2World &world)
 {
 	float xpos = -0.82f; //Starting co-ords
-	float ypos = 0.95f;
+	float ypos = 0.90f;
 	int count = 0;
 	for (int i = 0; i < 7; i++) //Iterating left to right
 	{
 		for (int n = 0; n < 5; n++) //Top to bottom
 		{
-			blocks.push_back(Block(xpos, ypos)); //Add to vector at current co-ords
+			blocks.push_back(Block(xpos, ypos, 0.24f, 0.04f)); //Add to vector at current co-ords
 			ypos -= 0.1f; //Reduce Y-coord for each iteration
 			//Attach fixture to body and body to world. 1.0f dens.
 			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
@@ -258,7 +281,7 @@ void drawBlocks(std::vector<Block> &blocks, b2World &world)
 			count++;
 
 		}
-		ypos = 0.95f; //Reset Y Co-ord for each full iteration of nested loop
+		ypos = 0.90f; //Reset Y Co-ord for each full iteration of nested loop
 		xpos += 0.27f;
 	}
 
@@ -269,11 +292,11 @@ static void cursorEnterCallback(GLFWwindow* window, int entered)
 {
 	if (entered)
 	{
-		*cursorActive = true;
+		*g_cursorActive = true;
 		std::cout << "Entered" << std::endl;
 	}
 	else {
-		*cursorActive = false;
+		*g_cursorActive = false;
 	}
 }
 
@@ -282,15 +305,15 @@ static void cursorPositionCallback(GLFWwindow* window, double x, double y)
 	//Conversion from pixel co-ord to GL co-ord (-1 to 1)
 	//-0.5 to center the cursor/paddle on Y
 	//*2 to cover full -1 to 1 range
-	(*cursorXPos) = ((x / SCREENWIDTH) - 0.5f) * 2; 
+	(*g_cursorXPos) = ((x / SCREENWIDTH) - 0.5f) * 2; 
 
 }
 
 void updatePaddlePos(GLFWwindow* window, Paddle& paddle)
 {
 	//Update xpos of both glfw and b2body
-	if (cursorActive) {
-		paddle.setXPos(*cursorXPos);
+	if (g_cursorActive) {
+		paddle.setXPos(*g_cursorXPos);
 	}
 }
 

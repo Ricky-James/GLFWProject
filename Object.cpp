@@ -2,15 +2,7 @@
 
 
 void Object::drawBox(b2Vec2 pos) {
-	//Calculate verts
-	/*Vector2 TL = { pos.x - width, pos.y + height };
-	Vector2 TR = { pos.x + width, pos.y + height };
-	Vector2 BR = { pos.x + width, pos.y - height };
-	Vector2 BL = { pos.x - width, pos.y - height };*/
 
-	
-
-	
 
 	glBegin(GL_QUADS); //Top left, clockwise
 	

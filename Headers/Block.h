@@ -8,18 +8,18 @@ private:
 	
 
 public:
-	Block(float x, float y) {
+	Block(float x, float y, float _width, float _height) {
 
 		pos.x = x;
 		pos.y = y;
-		width = 0.24f;
-		height = 0.04f;
+		width = _width;
+		height = _height;
 		colour[0] = 200;
 		colour[1] = 200;
 		colour[2] = 200;
 
 		//B2D
-		bodyDef.position.Set(x, y);
+		//bodyDef.position.Set(x, y);
 		bodyDef.type = b2_kinematicBody; //Unaffected by gravity
 		
 		//Shape
@@ -33,24 +33,20 @@ public:
 		fixtureDef.restitution = 1.0f;
 		bodyDef.linearDamping = 1.0f;
 		
+		bodyDef.position = b2Vec2(x, y);
 
 	}
 
 	float getX();
 	float getY();
 
-	void setName(std::string _name, int count)
-	{
-		assert(_name.length() > 0);
-		assert(count >= 0);
-		_name.append(std::to_string(count));
-		Object::setName(_name);
 
-	}
+	void setName(std::string _name, int count);
 
 	const b2PolygonShape getShape() {
 		return shape;
 	}
+	
 	
 };
 

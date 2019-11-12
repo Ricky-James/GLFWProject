@@ -23,6 +23,8 @@ public:
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_kinematicBody;
 
+		bodyDef.allowSleep = false; //Stops blocks from sleeping if they fall onto the paddle
+
 		shape.SetAsBox(width/2, height/2);
 
 		fixtureDef.shape = &shape;
@@ -44,6 +46,7 @@ public:
 	{
 		return pos;
 	}
+
 
 	
 

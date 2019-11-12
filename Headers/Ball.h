@@ -52,6 +52,7 @@ public:
 		bodyDef.linearDamping = 1.0f;
 		bodyDef.angularDamping = 1.0f;
 
+		bodyDef.allowSleep = false;
 
 		circleShape.m_p.Set(0, 0); //Position relative to body
 		circleShape.m_radius = radius;
