@@ -5,7 +5,7 @@ class Paddle : public Object
 {
 private:
 
-	
+	b2PolygonShape shape;
 
 public:
 
@@ -43,10 +43,7 @@ public:
 	const b2PolygonShape getShape() {
 		return shape;
 	}
-	const Vector2 getPos()
-	{
-		return pos;
-	}
+
 
 
 	

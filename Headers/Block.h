@@ -5,7 +5,7 @@ class Block : public Object
 {
 private:
 	
-	
+	b2PolygonShape shape;
 
 public:
 	Block(float x, float y, float _width, float _height) {
@@ -36,10 +36,6 @@ public:
 		bodyDef.position = b2Vec2(x, y);
 
 	}
-
-	float getX();
-	float getY();
-
 
 	void setName(std::string _name, int count);
 

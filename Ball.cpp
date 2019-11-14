@@ -5,7 +5,7 @@
 void Ball::drawBall() const {
 	glBegin(GL_POLYGON);
 
-	glColor3f(colours[0], colours[1], colours[2]);
+	glColor3f(colour[0], colour[1], colour[2]);
 
 	for (int i = 0; i < 360; i++) {
 		float degInRad = i * DEG2RAD;
@@ -25,13 +25,13 @@ void Ball::setPos(b2Vec2 b2pos)
 void Ball::setColours(float r, float g, float b)
 {
 	if (r >= 0 && r <= 1) {
-		colours[0] = r;
+		colour[0] = r;
 	}
 	if (g >= 0 && g <= 1) {
-		colours[1] = g;
+		colour[1] = g;
 	}
 	if (b >= 0 && b <= 1) {
-		colours[2] = b;
+		colour[2] = b;
 	}
 
 }

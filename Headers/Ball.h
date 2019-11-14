@@ -3,31 +3,19 @@
 #include <math.h>
 #include <Box2D/Box2D.h>
 #include <string>
+#include "Headers/Object.h"
 
-class Ball 
+class Ball : public Object
 {
 
 private:
-	
-	struct Vector2 {
-		float x, y;
-	};
-
-	Vector2 pos, spd;
-	
 
 	const float radius = 0.05f;
 	const float DEG2RAD = 3.14159 / 180;
 
-	float colours[3];
-
-
-	b2FixtureDef fixtureDef;
 	b2CircleShape circleShape;
 	
-	struct Userdata {
-		int name;
-	};
+	
 	
 
 public:
@@ -35,17 +23,17 @@ public:
 	b2BodyDef bodyDef;
 	b2Body* body;
 	bool contacting;
-	Userdata* data = new Userdata();
 
 	Ball()
 	{
-		data->name = 1;
+		setName("Ball");
 
-		pos.x = 0; pos.y = 0;
-		spd.x = 0; spd.y = 0;
-		colours[0] = 255;
-		colours[1] = 255;
-		colours[2] = 255;
+		pos.x = 0; 
+		pos.y = 0;
+		angle = 0;
+		colour[0] = 255;
+		colour[1] = 255;
+		colour[2] = 255;
 
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_dynamicBody;
@@ -62,13 +50,10 @@ public:
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 10.0f;
 
-	//	body->SetUserData((void*)data);
+		//body->SetUserData((void*)data);
 	}
 
-	float getxspeed() const { return spd.x; }
-	float getyspeed() const { return spd.y; }
-	float getxpos()   const { return pos.x; }
-	float getypos()   const { return pos.y; }
+	
 
 	//Draws ball to screen (+ position)
 	void drawBall() const;

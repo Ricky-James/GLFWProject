@@ -56,5 +56,5 @@ void Object::drawBox(b2Vec2 pos, float rotation)
 void Object::setName(std::string _name)
 {
 	assert(_name.length() > 0);
-	name = _name;
+	userdata.name = _name;
 }

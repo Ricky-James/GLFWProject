@@ -7,11 +7,13 @@
 class Object
 {
 private:
-	std::string name;
-	
+	struct Userdata {
+		std::string name;
+	};
 
 public:
 
+	Userdata userdata;
 	
 
 	Vector2 pos;
@@ -25,7 +27,7 @@ public:
 	
 	b2Body* body;
 	b2FixtureDef fixtureDef;
-	b2PolygonShape shape;
+	
 
 
 	void drawBox(b2Vec2 pos);
@@ -34,7 +36,14 @@ public:
 
 	const std::string getName()
 	{
-		return name;
+		return userdata.name;
 	}
+
+
+	const Vector2 getPos()
+	{
+		return pos;
+	}
+
 };
 
