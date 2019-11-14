@@ -5,9 +5,11 @@ class Paddle : public Object
 {
 private:
 
-
+	
 
 public:
+
+	float rotation;
 
 	Paddle() //Mostly see block constructor for comments
 	{
@@ -16,6 +18,7 @@ public:
 		pos.y = -0.875f;
 		width = 0.3f; //half of actual width
 		height = 0.04f;
+		rotation = 0.0f;
 		colour[0] = 200;
 		colour[1] = 0;
 		colour[2] = 0;
@@ -37,8 +40,6 @@ public:
 	
 
 	void setXPos(float x);
-
-
 	const b2PolygonShape getShape() {
 		return shape;
 	}

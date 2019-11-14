@@ -16,6 +16,11 @@
 
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
+#define DEG2RAD 0.0174533
+
+//TODO
+//Refactor Ball to inherit from Object
+//Collision
 
 //Used in input callbacks
 bool* g_cursorActive = new bool();
@@ -93,22 +98,6 @@ int main(void)
 	Collision *collider = new Collision();
 	world->SetContactListener(collider);
 
-	////Ground body setup
-	//b2BodyDef groundBodyDef;
-	//groundBodyDef.type = b2_staticBody;
-	//groundBodyDef.position.Set(0.0f, -10.0f);
-	//b2Body* groundBody = world.CreateBody(&groundBodyDef);
-
-	//b2PolygonShape groundBox;
-	//groundBox.SetAsBox(10.0f, 1.0f); //(w,h)
-	//
-	//b2FixtureDef fixtureDef;
-	//fixtureDef.shape = &groundBox;
-	//fixtureDef.density = 1.0f;
-	//fixtureDef.friction = 0.3f;
-
-	//groundBody->CreateFixture(&groundBox, 1.0f);
-
 
 	float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
 
@@ -127,11 +116,15 @@ int main(void)
 
 	Paddle paddle;
 
+	//Assigning position and sizes of walls for boundaries
+	//left/right/top/bottom.
+	//May decide to purge the bottom and/or top barrier later
 	std::vector<Block> walls;
 	walls.push_back(Block(-1, 0, 0.05f, 2.0f ));
 	walls.push_back(Block(1 , 0, 0.05f, 2.0f ));
 	walls.push_back(Block(0 , 1, 2.0f , 0.05f));
 	walls.push_back(Block(0 , -1, 2.0f , 0.05f));
+
 	for (std::vector<Block>::iterator itr = walls.begin(); itr != walls.end(); itr++)
 	{
 		int index = std::distance(walls.begin(), itr);
@@ -151,7 +144,6 @@ int main(void)
 
 	//Instantiate blocks
 	createBlocks(blocks, *world);
-
 	
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -170,6 +162,11 @@ int main(void)
 		{
 			world->Step(timeStep, velocityIterations, positionIterations);
 		}
+		
+		
+	
+		paddle.rotation += 0.01f;
+		
 		
 
 		
@@ -190,13 +187,10 @@ int main(void)
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
 		paddle.pos.y = box2glfw(paddle.body->GetPosition()).y;
 		paddle.bodyDef.position = glfw2box(paddle.getPos());
-		paddle.drawBox(paddle.body->GetPosition());
+		paddle.drawBox(paddle.body->GetPosition(), paddle.rotation);
 
 
-		//Block colours
-		glColor3f(0, 1, 0.5f);
-
-
+		
 		//Debug messages:
 		std::cout << "Ball Y pos: " << ball.body->GetPosition().y << std::endl;
 

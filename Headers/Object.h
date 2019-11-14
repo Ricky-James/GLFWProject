@@ -29,6 +29,7 @@ public:
 
 
 	void drawBox(b2Vec2 pos);
+	void drawBox(b2Vec2 pos, float rotation);
 	void setName(std::string _name);
 
 	const std::string getName()
