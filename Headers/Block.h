@@ -35,6 +35,7 @@ public:
 		
 		bodyDef.position = b2Vec2(x, y);
 
+
 	}
 
 	~Block()
@@ -54,6 +55,8 @@ public:
 	const b2PolygonShape getShape() {
 		return shape;
 	}
+
+
 	
 	
 };

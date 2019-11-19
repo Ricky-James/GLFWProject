@@ -11,6 +11,7 @@ public:
 
 	float rotation;
 
+
 	Paddle() //Mostly see block constructor for comments
 	{
 		setName("Paddle");
@@ -35,6 +36,8 @@ public:
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
 		fixtureDef.restitution = 1.0f;
+
+
 
 
 	}

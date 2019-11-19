@@ -11,10 +11,11 @@ private:
 		std::string name;
 	};
 
+	
+
 public:
 
 	Userdata userdata;
-	
 
 	Vector2 pos;
 	float angle;
@@ -44,6 +45,8 @@ public:
 	{
 		return pos;
 	}
+
+
 
 };
 
