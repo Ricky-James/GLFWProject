@@ -32,22 +32,33 @@ void Object::drawBox()
 {
 	b2Vec2 pos = this->body->GetPosition();
 
-	glPointSize(4);
-	
-	glBegin(GL_POLYGON); //Top left, clockwise
 
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();             // save the current GL_MODELVIEW matrix 
+
+
+	glBegin(GL_QUADS); //Top left, clockwise
+
+	glTranslatef(pos.x, pos.y, 0.0f);
+	glRotatef(this->body->GetAngle(), 0, 0, 1);  // rotate your object
+	
 	glVertex2f( pos.x - width / 2, pos.y + height / 2 );
 	glVertex2f( pos.x + width / 2, pos.y + height / 2 );
 	glVertex2f( pos.x + width / 2, pos.y - height / 2 );
 	glVertex2f( pos.x - width / 2, pos.y - height / 2 );
+
+	
 	
 
-	glRotatef(this->body->GetAngle(), 0, 0, 1);
-
-	std::cout << "Paddle rotation (RADS): " << this->body->GetAngle() << std::endl;
+	if(this->getName() == "Paddle")
+		std::cout << "Rotation (RADS): " << this->body->GetAngle() << std::endl;
 
 
 	glEnd();
+
+	glPopMatrix();              // restore the GL_MODELVIEW matrix
+
 }
 
 void Object::setName(std::string _name)

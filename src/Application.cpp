@@ -189,7 +189,7 @@ int main(void)
 		
 		//Paddle
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
-		
+		paddle.body->SetTransform(paddle.body->GetPosition(), paddle.rotation); //Debug line to force an angle for testing
 		paddle.drawBox();
 
 		
@@ -209,7 +209,7 @@ int main(void)
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
 			block.drawBox();
 			
-		//	printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, angle);
+
 		}
 		if (blocks.empty())
 		{
