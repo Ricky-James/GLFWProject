@@ -20,7 +20,7 @@ public:
 
 		//B2D
 		//bodyDef.position.Set(x, y);
-		bodyDef.type = b2_kinematicBody; //Unaffected by gravity
+		bodyDef.type = b2_staticBody; //Unaffected by gravity
 		
 		//Shape
 		shape.SetAsBox(width / 2, height / 2);
@@ -35,6 +35,18 @@ public:
 		
 		bodyDef.position = b2Vec2(x, y);
 
+	}
+
+	~Block()
+	{
+		//Increase ball speed?
+		//Reduce paddle size?
+		//Game state can change for every block destroyed.
+	}
+	void hit()
+	{
+		//Changing body type causes it to be affected by gravity and fall
+		bodyDef.type = b2_dynamicBody;
 	}
 
 	void setName(std::string _name, int count);

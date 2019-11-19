@@ -29,11 +29,12 @@ public:
 		bodyDef.allowSleep = false; //Stops blocks from sleeping if they fall onto the paddle
 
 		shape.SetAsBox(width/2, height/2);
+		
 
 		fixtureDef.shape = &shape;
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.3f;
-		fixtureDef.restitution = 10.0f;
+		fixtureDef.restitution = 1.0f;
 
 
 	}

@@ -144,7 +144,7 @@ int main(void)
 
 	//Instantiate blocks
 	createBlocks(blocks, *world);
-	
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -164,9 +164,12 @@ int main(void)
 		}
 		
 		
-	
-		paddle.rotation += 0.01f;
-		
+		//Just for testing!
+		if (paddle.rotation > 360) {
+			paddle.rotation = 0;
+		}
+		paddle.rotation += 1;
+		////////////////////
 		
 
 		
@@ -182,23 +185,19 @@ int main(void)
 		{
 			ball.setColours(0.5f, 1.0f, 1.0f);
 		}
-
+		
+		
 		//Paddle
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
-		paddle.pos.y = box2glfw(paddle.body->GetPosition()).y;
-		paddle.bodyDef.position = glfw2box(paddle.getPos());
-		paddle.drawBox(paddle.body->GetPosition(), paddle.rotation);
-
+		
+		paddle.drawBox();
 
 		
-		//Debug messages:
-		std::cout << "Ball Y pos: " << ball.body->GetPosition().y << std::endl;
+	
 
 		for (Block wall : walls)
 		{
-			
-		//	wall.pos = box2glfw(wall.body->GetPosition());
-			wall.drawBox(glfw2box(wall.pos)); //unnecessary to draw, drawing for debug purposes
+			wall.drawBox(); //unnecessary to draw, drawing for debug purposes
 		}
 
 		//Iterator for drawing blocks.
@@ -208,7 +207,7 @@ int main(void)
 			block.pos = box2glfw(block.body->GetPosition());
 			
 			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
-			block.drawBox(block.body->GetPosition());
+			block.drawBox();
 			
 		//	printf("%4.2f %4.2f %4.2f\n", pos.x, pos.y, angle);
 		}
