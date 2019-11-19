@@ -8,19 +8,18 @@ private:
 	b2PolygonShape shape;
 
 public:
-	Block(float x, float y, float _width, float _height) {
+	Block(float x, float y, float width, float height, b2BodyType type) {
 
 		pos.x = x;
 		pos.y = y;
-		width = _width;
-		height = _height;
+		this->width = width;
+		this->height = height;
 		colour[0] = 200;
 		colour[1] = 200;
 		colour[2] = 200;
 
 		//B2D
-		//bodyDef.position.Set(x, y);
-		bodyDef.type = b2_staticBody; //Unaffected by gravity
+		bodyDef.type = type; //Unaffected by gravity
 		
 		//Shape
 		shape.SetAsBox(width / 2, height / 2);
@@ -28,13 +27,13 @@ public:
 		//Fixture
 
 		fixtureDef.shape = &shape; //Attach shape & body
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.3f;
+		fixtureDef.density = 0.1f;
+		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;
-		bodyDef.linearDamping = 1.0f;
+		bodyDef.linearDamping = 1.0f; //Basically air resistance
+
 		
 		bodyDef.position = b2Vec2(x, y);
-
 
 	}
 
@@ -55,6 +54,8 @@ public:
 	const b2PolygonShape getShape() {
 		return shape;
 	}
+
+
 
 
 	

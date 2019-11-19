@@ -98,6 +98,8 @@ int main(void)
 	Collision *collider = new Collision();
 	world->SetContactListener(collider);
 
+	
+
 
 	float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
 
@@ -110,7 +112,7 @@ int main(void)
 
 	
 	ball.body = world->CreateBody(&ball.bodyDef);
-	ball.body->CreateFixture(&ball.getShape(), 1.0f);
+	ball.body->CreateFixture(&ball.getShape(), 0.1f);
 	ball.body->SetGravityScale(1.0f);
 
 
@@ -120,10 +122,10 @@ int main(void)
 	//left/right/top/bottom.
 	//May decide to purge the bottom and/or top barrier later
 	std::vector<Block> walls;
-	walls.push_back(Block(-1, 0, 0.05f, 2.0f ));
-	walls.push_back(Block(1 , 0, 0.05f, 2.0f ));
-	walls.push_back(Block(0 , 1, 2.0f , 0.05f));
-	walls.push_back(Block(0 , -1, 2.0f , 0.05f));
+	walls.push_back(Block(-1, 0, 0.05f, 2.0f  , b2_kinematicBody));
+	walls.push_back(Block(1 , 0, 0.05f, 2.0f  , b2_kinematicBody));
+	walls.push_back(Block(0 , 1, 2.0f , 0.05f , b2_kinematicBody));
+	walls.push_back(Block(0 , -1, 2.0f , 0.05f, b2_kinematicBody));
 
 	for (std::vector<Block>::iterator itr = walls.begin(); itr != walls.end(); itr++)
 	{
@@ -157,22 +159,13 @@ int main(void)
 		
 		//Movement
 
-		//Frame advance debugging (R to step)
+		//Step toggled by pressing R
 		if (step)
 		{
 			world->Step(timeStep, velocityIterations, positionIterations);
 		}
 		
-		
-		//Just for testing!
-		if (paddle.rotation > 360) {
-			paddle.rotation = 0;
-		}
-		paddle.rotation += 1;
-		////////////////////
-		
 
-		
 		//Drawing
 
 		//Ball
@@ -189,10 +182,10 @@ int main(void)
 		
 		//Paddle
 		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
-		paddle.body->SetTransform(paddle.body->GetPosition(), paddle.rotation); //Debug line to force an angle for testing
+		paddle.body->SetTransform(paddle.body->GetPosition(), paddle.body->GetAngle()); 
 		paddle.drawBox();
 
-		
+		std::cout << "Body -> GetAngle(): " << paddle.body->GetAngle() << std::endl;
 	
 
 		for (Block wall : walls)
@@ -249,8 +242,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 	{
-		ball.ballToPaddle(b2Vec2(0.0f, 3.0f));
+		ball.ballToPaddle(b2Vec2(0.3f, 0.5f));
 	}	
+	if (key == GLFW_KEY_E && action == GLFW_PRESS)
+	{
+		ball.ballToPaddle(b2Vec2(-0.3f, 0.5f));
+	}
 
 }
 
@@ -263,7 +260,7 @@ void createBlocks(std::vector<Block> &blocks, b2World &world)
 	{
 		for (int n = 0; n < 5; n++) //Top to bottom
 		{
-			blocks.push_back(Block(xpos, ypos, 0.24f, 0.04f)); //Add to vector at current co-ords
+			blocks.push_back(Block(xpos, ypos, 0.24f, 0.04f, b2_staticBody)); //Add to vector at current co-ords
 			ypos -= 0.1f; //Reduce Y-coord for each iteration
 			//Attach fixture to body and body to world. 1.0f dens.
 			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
@@ -272,12 +269,10 @@ void createBlocks(std::vector<Block> &blocks, b2World &world)
 			blocks.back().setName("Block", count);
 			std::cout << blocks.back().getName() << std::endl;
 			count++;
-
 		}
 		ypos = 0.90f; //Reset Y Co-ord for each full iteration of nested loop
 		xpos += 0.27f;
 	}
-
 }
 
 

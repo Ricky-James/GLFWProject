@@ -19,7 +19,6 @@ public:
 		pos.y = -0.875f;
 		width = 0.3f; //half of actual width
 		height = 0.04f;
-		rotation = 0.0f;
 		colour[0] = 200;
 		colour[1] = 0;
 		colour[2] = 0;
@@ -34,7 +33,7 @@ public:
 
 		fixtureDef.shape = &shape;
 		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.3f;
+		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;
 
 

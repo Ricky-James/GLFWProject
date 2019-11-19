@@ -39,16 +39,17 @@ public:
 		bodyDef.type = b2_dynamicBody;
 		bodyDef.linearDamping = 1.0f;
 		bodyDef.angularDamping = 1.0f;
-
+		//bodyDef.fixedRotation = true;
 		bodyDef.allowSleep = false;
+
 
 		circleShape.m_p.Set(0, 0); //Position relative to body
 		circleShape.m_radius = radius;
 
 		fixtureDef.shape = &circleShape;
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.3f;
-		fixtureDef.restitution = 10.0f;
+		fixtureDef.friction = 0;
+		fixtureDef.restitution = 1.0f;
+		
 
 		//body->SetUserData((void*)data);
 	}
