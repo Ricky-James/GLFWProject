@@ -21,8 +21,7 @@ public:
 	float angle;
 	float width;
 	float height;
-
-	float colour[3];
+	GLfloat colour[3];
 
 	b2BodyDef bodyDef;
 	
@@ -32,7 +31,7 @@ public:
 
 
 	void drawBox();
-	/*void drawBox(b2Vec2 pos);*/
+	void setColours(int r, int g, int b);
 	void setName(std::string _name);
 
 	const std::string getName()

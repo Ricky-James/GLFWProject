@@ -38,10 +38,10 @@ public:
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_dynamicBody;
 		bodyDef.linearDamping = 1.0f;
-		bodyDef.angularDamping = 1.0f;
+		bodyDef.angularDamping = 0.1f;
 		//bodyDef.fixedRotation = true;
 		bodyDef.allowSleep = false;
-
+		bodyDef.angularVelocity = 1.0f;
 
 		circleShape.m_p.Set(0, 0); //Position relative to body
 		circleShape.m_radius = radius;
@@ -59,7 +59,7 @@ public:
 	//Draws ball to screen (+ position)
 	void drawBall() const;
 	void setPos(b2Vec2 b2pos);
-	void setColours(float r, float g, float b);
+
 
 	const b2CircleShape getShape() {
 		return circleShape;

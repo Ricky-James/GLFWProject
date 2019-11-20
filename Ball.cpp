@@ -22,16 +22,4 @@ void Ball::setPos(b2Vec2 b2pos)
 	pos.y = b2pos.y;
 }
 
-void Ball::setColours(float r, float g, float b)
-{
-	if (r >= 0 && r <= 1) {
-		colour[0] = r;
-	}
-	if (g >= 0 && g <= 1) {
-		colour[1] = g;
-	}
-	if (b >= 0 && b <= 1) {
-		colour[2] = b;
-	}
 
-}

@@ -19,9 +19,9 @@ public:
 		pos.y = -0.875f;
 		width = 0.3f; //half of actual width
 		height = 0.04f;
-		colour[0] = 200;
+		colour[0] = 0.6f;
 		colour[1] = 0;
-		colour[2] = 0;
+		colour[2] = 0.6f;
 		
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_kinematicBody;

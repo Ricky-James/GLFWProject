@@ -11,6 +11,7 @@ void Object::drawBox()
 	float32 angle = this->body->GetAngle();
 
 	glMatrixMode(GL_MODELVIEW);
+	glColor3f(this->colour[0], this->colour[1], this->colour[2]);
 
 	glPushMatrix();             // save the current GL_MODELVIEW matrix 
 	{
@@ -30,6 +31,8 @@ void Object::drawBox()
 
 	glBegin(GL_QUADS); //Top left, clockwise
 	{
+		
+
 		for (int i = 0; i < 8; i += 2)
 		{
 			glVertex2f(points[i], points[i + 1]);
@@ -44,6 +47,17 @@ void Object::drawBox()
 	if(this->getName() == "Paddle")
 		std::cout << "Rotation (RADS): " << this->body->GetAngle() << std::endl;
 
+
+}
+
+void Object::setColours(int r, int g, int b) //Values between 0-255
+{
+	assert(r >= 0, g >= 0, b >= 0);
+	assert(r <= 255, g <= 255, b <= 255);
+
+	colour[0] = r / 255.0f;
+	colour[1] = g / 255.0f;
+	colour[2] = b / 255.0f;
 
 }
 

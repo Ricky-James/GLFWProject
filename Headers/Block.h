@@ -14,9 +14,9 @@ public:
 		pos.y = y;
 		this->width = width;
 		this->height = height;
-		colour[0] = 200;
-		colour[1] = 200;
-		colour[2] = 200;
+		colour[0] = 52  / 255.0f;
+		colour[1] = 204 / 255.0f;
+		colour[2] = 235 / 255.0f;
 
 		//B2D
 		bodyDef.type = type; //Unaffected by gravity
@@ -31,7 +31,7 @@ public:
 		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;
 		bodyDef.linearDamping = 1.0f; //Basically air resistance
-
+		
 		
 		bodyDef.position = b2Vec2(x, y);
 

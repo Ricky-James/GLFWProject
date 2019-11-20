@@ -112,7 +112,7 @@ int main(void)
 
 	
 	ball.body = world->CreateBody(&ball.bodyDef);
-	ball.body->CreateFixture(&ball.getShape(), 0.1f);
+	ball.body->CreateFixture(&ball.getShape(), 1.0f);
 	ball.body->SetGravityScale(1.0f);
 
 
@@ -135,6 +135,7 @@ int main(void)
 		currentWall->body = world->CreateBody(&currentWall->bodyDef);
 		currentWall->body->CreateFixture(&currentWall->getShape(), 1.0f);
 		currentWall->body->SetGravityScale(1.0f);
+		currentWall->setColours(235, 85, 52);
 	}
 
 
@@ -169,19 +170,15 @@ int main(void)
 		//Drawing
 
 		//Ball
-		ball.setColours(1, 0.5f, 0.5f);
 		ball.setPos(ball.body->GetPosition());
 
 
 		ball.drawBall();
-		if (ball.contacting)
-		{
-			ball.setColours(0.5f, 1.0f, 1.0f);
-		}
+
 		
 		
 		//Paddle
-		glColor3f(paddle.colour[0], paddle.colour[1], paddle.colour[2]);
+		
 		paddle.body->SetTransform(paddle.body->GetPosition(), paddle.body->GetAngle()); 
 		paddle.drawBox();
 
@@ -199,7 +196,7 @@ int main(void)
 		{		
 			block.pos = box2glfw(block.body->GetPosition());
 			
-			glColor3f(block.colour[0], block.colour[1], block.colour[2]);
+			
 			block.drawBox();
 			
 
@@ -242,11 +239,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 	{
-		ball.ballToPaddle(b2Vec2(0.3f, 0.5f));
+		ball.ballToPaddle(b2Vec2(1.0f, 3.0f));
 	}	
 	if (key == GLFW_KEY_E && action == GLFW_PRESS)
 	{
-		ball.ballToPaddle(b2Vec2(-0.3f, 0.5f));
+		ball.ballToPaddle(b2Vec2(-1.0f, 3.0f));
 	}
 
 }
