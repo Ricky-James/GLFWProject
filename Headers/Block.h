@@ -32,6 +32,7 @@ public:
 		fixtureDef.restitution = 1.0f;
 		bodyDef.linearDamping = 1.0f; //Basically air resistance
 		
+		//body->SetUserData(&userdata);
 		
 		bodyDef.position = b2Vec2(x, y);
 

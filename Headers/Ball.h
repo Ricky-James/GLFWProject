@@ -11,7 +11,6 @@ class Ball : public Object
 private:
 
 	const float radius = 0.05f;
-	const float DEG2RAD = 3.14159 / 180;
 
 	b2CircleShape circleShape;
 	
@@ -26,6 +25,7 @@ public:
 
 	Ball()
 	{
+		
 		setName("Ball");
 
 		pos.x = 0; 
@@ -34,6 +34,8 @@ public:
 		colour[0] = 255;
 		colour[1] = 255;
 		colour[2] = 255;
+
+		
 
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_dynamicBody;
@@ -50,8 +52,8 @@ public:
 		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;
 		
+		//body->SetUserData( this );
 
-		//body->SetUserData((void*)data);
 	}
 
 	
@@ -61,14 +63,9 @@ public:
 	void setPos(b2Vec2 b2pos);
 
 
-	const b2CircleShape getShape() {
-		return circleShape;
-	}
+	const b2CircleShape getShape();
 
-	void ballToPaddle(b2Vec2 force)
-	{
-		body->ApplyForce(force, body->GetPosition(), true);
-	}
+	void ballToPaddle(b2Vec2 force);
 
 	void startContact() { contacting = true; }
 

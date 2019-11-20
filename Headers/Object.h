@@ -4,6 +4,9 @@
 #include "Vector2.h"
 #include <string>
 
+#define RAD2DEG 57.2958 
+#define DEG2RAD 0.0174533
+
 class Object
 {
 private:
@@ -29,8 +32,7 @@ public:
 	b2FixtureDef fixtureDef;
 	
 
-
-	void drawBox();
+	void drawBox() const;
 	void setColours(int r, int g, int b);
 	void setName(std::string _name);
 

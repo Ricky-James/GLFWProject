@@ -22,4 +22,13 @@ void Ball::setPos(b2Vec2 b2pos)
 	pos.y = b2pos.y;
 }
 
+const b2CircleShape Ball::getShape() {
+	return circleShape;
+}
+
+void Ball::ballToPaddle(b2Vec2 force)
+{
+	body->ApplyForce(force, body->GetPosition(), true);
+}
+
 

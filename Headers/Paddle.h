@@ -6,10 +6,12 @@ class Paddle : public Object
 private:
 
 	b2PolygonShape shape;
+	float rotation;
+	float const maxRotate = 30;
 
 public:
 
-	float rotation;
+
 
 
 	Paddle() //Mostly see block constructor for comments
@@ -41,8 +43,10 @@ public:
 
 	}
 	
+	void updateRotation();
 
-	void setXPos(float x);
+	float getRotation(); //Sets rotation according to body xPos and returns new value
+	void updatePosition(float x);
 	const b2PolygonShape getShape() {
 		return shape;
 	}

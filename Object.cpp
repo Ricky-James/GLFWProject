@@ -1,10 +1,6 @@
 #include "Headers/Object.h"
-#include <iostream> //For debug messages
 
-#define RAD2DEG 57.2958 
-#define DEG2RAD 0.0174533
-
-void Object::drawBox()
+void Object::drawBox() const
 {
 
 	b2Vec2 center = this->body->GetPosition();
@@ -42,10 +38,6 @@ void Object::drawBox()
 
 	glPopMatrix();              // restore the GL_MODELVIEW matrix
 	
-
-
-	if(this->getName() == "Paddle")
-		std::cout << "Rotation (RADS): " << this->body->GetAngle() << std::endl;
 
 
 }

@@ -28,7 +28,7 @@ float* g_cursorXPos = new float();
 
 //Just for debugging really
 bool step = false;
-Ball ball;
+
 
 void createBlocks(std::vector<Block> &blocks, b2World &world);
 
@@ -59,7 +59,7 @@ int main(void)
 
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(SCREENWIDTH, SCREENHEIGHT, "OpenGL Project", NULL, NULL);
-	int* count;
+	
 	
 
 	if (!window)
@@ -110,13 +110,13 @@ int main(void)
 	//**********END B2 INIT*************//BOX 2D INIT
 	
 
-	
-	ball.body = world->CreateBody(&ball.bodyDef);
-	ball.body->CreateFixture(&ball.getShape(), 1.0f);
-	ball.body->SetGravityScale(1.0f);
+	Ball* ball = new Ball();
 
+	ball->body = world->CreateBody(&ball->bodyDef);
+	ball->body->CreateFixture(&ball->getShape(), 1.0f);
+	ball->body->SetGravityScale(1.0f);
 
-	Paddle paddle;
+	Paddle* paddle = new Paddle();
 
 	//Assigning position and sizes of walls for boundaries
 	//left/right/top/bottom.
@@ -140,9 +140,9 @@ int main(void)
 
 
 
-	paddle.body = world->CreateBody(&paddle.bodyDef);
-	paddle.body->CreateFixture(&paddle.getShape(), 1.0f);
-	paddle.body->SetGravityScale(1.0f);
+	paddle->body = world->CreateBody(&paddle->bodyDef);
+	paddle->body->CreateFixture(&paddle->getShape(), 1.0f);
+	paddle->body->SetGravityScale(1.0f);
 	std::vector<Block> blocks;
 
 	//Instantiate blocks
@@ -154,6 +154,7 @@ int main(void)
 
 		/* Setup view: */
 		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(0.2f, 0.1f, 0.1f, 1.0f); //Background colour
 
 
 		/* Render here */
@@ -170,19 +171,18 @@ int main(void)
 		//Drawing
 
 		//Ball
-		ball.setPos(ball.body->GetPosition());
-
-
-		ball.drawBall();
+		ball->setPos(ball->body->GetPosition());
+		ball->drawBall();
 
 		
 		
-		//Paddle
-		
-		paddle.body->SetTransform(paddle.body->GetPosition(), paddle.body->GetAngle()); 
-		paddle.drawBox();
+		//Paddle drawing
+		//Paddle rotation changes in accordance with X position
+		paddle->updateRotation();
+		//Position updated in mouse callback
+		paddle->drawBox();
 
-		std::cout << "Body -> GetAngle(): " << paddle.body->GetAngle() << std::endl;
+		std::cout << "Body -> GetAngle(): " << paddle->body->GetAngle() << std::endl;
 	
 
 		for (Block wall : walls)
@@ -196,6 +196,7 @@ int main(void)
 		{		
 			block.pos = box2glfw(block.body->GetPosition());
 			
+			//TODO Check if box pos.y is < -1, pop from vec and delete if so.
 			
 			block.drawBox();
 			
@@ -211,7 +212,7 @@ int main(void)
 
 		/* Poll for and process events */
 
-		updatePaddlePos(window, paddle);
+		updatePaddlePos(window, *paddle);
 		glfwPollEvents();
 
 	}
@@ -235,15 +236,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_R && action == GLFW_PRESS) //Frame advance tool
 	{
 		step = !step;
+		
 	}
 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 	{
-		ball.ballToPaddle(b2Vec2(1.0f, 3.0f));
+		//ball.ballToPaddle(b2Vec2(1.0f, 3.0f));
 	}	
 	if (key == GLFW_KEY_E && action == GLFW_PRESS)
 	{
-		ball.ballToPaddle(b2Vec2(-1.0f, 3.0f));
+		//ball.ballToPaddle(b2Vec2(-1.0f, 3.0f));
 	}
 
 }
@@ -287,7 +289,7 @@ static void cursorEnterCallback(GLFWwindow* window, int entered)
 
 static void cursorPositionCallback(GLFWwindow* window, double x, double y)
 {
-	//Conversion from pixel co-ord to GL co-ord (-1 to 1)
+	//Conversion from pixel co-ord to GLFW co-ord (-1 to 1)
 	//-0.5 to center the cursor/paddle on Y
 	//*2 to cover full -1 to 1 range
 	(*g_cursorXPos) = ((x / SCREENWIDTH) - 0.5f) * 2; 
@@ -298,7 +300,7 @@ void updatePaddlePos(GLFWwindow* window, Paddle& paddle)
 {
 	//Update xpos of both glfw and b2body
 	if (g_cursorActive) {
-		paddle.setXPos(*g_cursorXPos);
+		paddle.updatePosition(*g_cursorXPos);
 	}
 }
 
