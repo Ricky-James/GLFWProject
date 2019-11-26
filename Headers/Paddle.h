@@ -1,7 +1,8 @@
 #pragma once
 #include "Headers/Object.h"
+#include "Block.h"
 
-class Paddle : public Object
+class Paddle : public virtual Object
 {
 private:
 
@@ -11,16 +12,15 @@ private:
 
 public:
 
-
-
-
 	Paddle() //Mostly see block constructor for comments
 	{
 		setName("Paddle");
+		
 		pos.x = 0.f;
 		pos.y = -0.875f;
 		width = 0.3f; //half of actual width
 		height = 0.04f;
+		rotation = 0;
 		colour[0] = 0.6f;
 		colour[1] = 0;
 		colour[2] = 0.6f;
@@ -43,6 +43,7 @@ public:
 
 	}
 	
+	void draw() override;
 	void updateRotation();
 
 	float getRotation(); //Sets rotation according to body xPos and returns new value

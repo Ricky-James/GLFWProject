@@ -24,7 +24,7 @@
 
 //Used in input callbacks
 bool* g_cursorActive = new bool();
-float* g_cursorXPos = new float();
+double* g_cursorXPos = new double();
 
 //Just for debugging really
 bool step = false;
@@ -44,9 +44,9 @@ b2Vec2 glfw2box(Vector2 glfwPos);
 
 int main(void)
 {
-
-	GLFWwindow* window;
 	
+	GLFWwindow* window;
+
 	/* Initialize the library */
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
@@ -172,7 +172,7 @@ int main(void)
 
 		//Ball
 		ball->setPos(ball->body->GetPosition());
-		ball->drawBall();
+		ball->draw();
 
 		
 		
@@ -180,14 +180,14 @@ int main(void)
 		//Paddle rotation changes in accordance with X position
 		paddle->updateRotation();
 		//Position updated in mouse callback
-		paddle->drawBox();
+		paddle->draw();
 
 		std::cout << "Body -> GetAngle(): " << paddle->body->GetAngle() << std::endl;
 	
 
 		for (Block wall : walls)
 		{
-			wall.drawBox(); //unnecessary to draw, drawing for debug purposes
+			wall.draw(); //unnecessary to draw, drawing for debug purposes
 		}
 
 		//Iterator for drawing blocks.
@@ -198,7 +198,7 @@ int main(void)
 			
 			//TODO Check if box pos.y is < -1, pop from vec and delete if so.
 			
-			block.drawBox();
+			block.draw();
 			
 
 		}
@@ -217,8 +217,16 @@ int main(void)
 
 	}
 
-	delete[] world;
+	//Pointer cleanup
+	delete world; 
 	world = NULL;
+	delete[] g_cursorActive;
+	g_cursorActive = NULL;
+	delete[] g_cursorXPos;
+	g_cursorXPos = NULL;
+	delete paddle;
+	paddle = NULL;
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
@@ -228,12 +236,17 @@ int main(void)
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_ESCAPE) {
+		delete[] g_cursorActive;
+		g_cursorActive = NULL;
+		delete[] g_cursorXPos;
+		g_cursorXPos = NULL;
+
 		glfwDestroyWindow(window);
 		glfwTerminate();
 		exit(EXIT_SUCCESS);
 	}
 
-	if (key == GLFW_KEY_R && action == GLFW_PRESS) //Frame advance tool
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) //Basic pause/unpause
 	{
 		step = !step;
 		
@@ -242,6 +255,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 	{
 		//ball.ballToPaddle(b2Vec2(1.0f, 3.0f));
+
 	}	
 	if (key == GLFW_KEY_E && action == GLFW_PRESS)
 	{

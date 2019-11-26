@@ -7,6 +7,7 @@
 #define RAD2DEG 57.2958 
 #define DEG2RAD 0.0174533
 
+//Abstract class for all defined objects
 class Object
 {
 private:
@@ -14,7 +15,6 @@ private:
 		std::string name;
 	};
 
-	
 
 public:
 
@@ -31,18 +31,18 @@ public:
 	b2Body* body;
 	b2FixtureDef fixtureDef;
 	
-
-	void drawBox() const;
-	void setColours(int r, int g, int b);
+	virtual void draw() = 0;
+	void setColours(int r, int g, int b); //For values 0-255, converts to 0-1
+	void setColours(float r, float g, float b); //For values 0-1
 	void setName(std::string _name);
 
-	const std::string getName()
+	virtual const std::string getName()
 	{
 		return userdata.name;
 	}
 
 
-	const Vector2 getPos()
+	virtual const Vector2 getPos()
 	{
 		return pos;
 	}

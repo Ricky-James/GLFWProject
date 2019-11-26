@@ -2,7 +2,7 @@
 
 
 
-void Ball::drawBall() const {
+void Ball::draw() {
 	glBegin(GL_POLYGON);
 
 	glColor3f(colour[0], colour[1], colour[2]);

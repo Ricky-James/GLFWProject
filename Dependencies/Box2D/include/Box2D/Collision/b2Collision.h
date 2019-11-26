@@ -69,8 +69,8 @@ union b2ContactID
 struct b2ManifoldPoint
 {
 	b2Vec2 localPoint;		///< usage depends on manifold type
-	float32 normalImpulse;	///< the non-penetration impulse
-	float32 tangentImpulse;	///< the friction impulse
+	float32 normalImpulse = 0;	///< the non-penetration impulse
+	float32 tangentImpulse = 0;	///< the friction impulse
 	b2ContactID id;			///< uniquely identifies a contact point between two shapes
 };
 

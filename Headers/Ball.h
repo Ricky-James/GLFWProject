@@ -5,7 +5,7 @@
 #include <string>
 #include "Headers/Object.h"
 
-class Ball : public Object
+class Ball : public virtual Object
 {
 
 private:
@@ -59,7 +59,7 @@ public:
 	
 
 	//Draws ball to screen (+ position)
-	void drawBall() const;
+	void draw() override;
 	void setPos(b2Vec2 b2pos);
 
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Headers/Object.h"
 
-class Block : public Object
+class Block : public virtual Object
 {
 private:
 	
@@ -44,6 +44,9 @@ public:
 		//Reduce paddle size?
 		//Game state can change for every block destroyed.
 	}
+
+	void draw() override;
+
 	void hit()
 	{
 		//Changing body type causes it to be affected by gravity and fall
