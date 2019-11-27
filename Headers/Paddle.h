@@ -14,6 +14,7 @@ public:
 
 	Paddle() //Mostly see block constructor for comments
 	{
+		name = new std::string();
 		setName("Paddle");
 		
 		pos.x = 0.f;
@@ -38,9 +39,11 @@ public:
 		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;
 
-
-
-
+	}
+	~Paddle()
+	{
+		delete name;
+		name = NULL;
 	}
 	
 	void draw() override;

@@ -1,6 +1,5 @@
 #include <GLFW/glfw3.h>
 #include <iostream> //for debug purposes
-
 #include <Box2D/Box2D.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,24 +10,17 @@
 #include "Headers/Paddle.h"
 #include "Headers/Block.h"
 #include "Headers/Collision.h"
-
 #include <iostream>
 
 #define SCREENWIDTH 640
 #define SCREENHEIGHT 640
-#define DEG2RAD 0.0174533
-
-//TODO
-//Refactor Ball to inherit from Object
-//Collision
 
 //Used in input callbacks
 bool* g_cursorActive = new bool();
 double* g_cursorXPos = new double();
 
 //Just for debugging really
-bool step = false;
-
+bool step = true;
 
 void createBlocks(std::vector<Block> &blocks, b2World &world);
 
@@ -89,6 +81,7 @@ int main(void)
 	
 
 	//**********START B2 INIT*************
+	
 	b2Vec2 gravity(0.0f, -9.8f);
 	b2World* world = new b2World(gravity);
 	world->SetWarmStarting(true);
@@ -97,7 +90,7 @@ int main(void)
 	//b2Contact Listener for collision detection
 	Collision *collider = new Collision();
 	world->SetContactListener(collider);
-
+	
 	
 
 
@@ -109,14 +102,19 @@ int main(void)
 	int32 positionIterations = 3;
 	//**********END B2 INIT*************//BOX 2D INIT
 	
-
+	//Game object initialising in the box2d World
 	Ball* ball = new Ball();
-
 	ball->body = world->CreateBody(&ball->bodyDef);
 	ball->body->CreateFixture(&ball->getShape(), 1.0f);
 	ball->body->SetGravityScale(1.0f);
+	ball->body->SetUserData(&ball->getName());
+	
 
 	Paddle* paddle = new Paddle();
+	paddle->body = world->CreateBody(&paddle->bodyDef);
+	paddle->body->CreateFixture(&paddle->getShape(), 1.0f);
+	paddle->body->SetGravityScale(1.0f);
+	paddle->body->SetUserData(paddle);
 
 	//Assigning position and sizes of walls for boundaries
 	//left/right/top/bottom.
@@ -136,13 +134,12 @@ int main(void)
 		currentWall->body->CreateFixture(&currentWall->getShape(), 1.0f);
 		currentWall->body->SetGravityScale(1.0f);
 		currentWall->setColours(235, 85, 52);
+		currentWall->body->SetUserData(currentWall);
 	}
 
 
 
-	paddle->body = world->CreateBody(&paddle->bodyDef);
-	paddle->body->CreateFixture(&paddle->getShape(), 1.0f);
-	paddle->body->SetGravityScale(1.0f);
+
 	std::vector<Block> blocks;
 
 	//Instantiate blocks
@@ -151,6 +148,10 @@ int main(void)
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
+		//Step toggled by pressing R
+		if (step)
+			world->Step(timeStep, velocityIterations, positionIterations);
+
 
 		/* Setup view: */
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -158,14 +159,8 @@ int main(void)
 
 
 		/* Render here */
-		
-		//Movement
 
-		//Step toggled by pressing R
-		if (step)
-		{
-			world->Step(timeStep, velocityIterations, positionIterations);
-		}
+
 		
 
 		//Drawing
@@ -182,7 +177,6 @@ int main(void)
 		//Position updated in mouse callback
 		paddle->draw();
 
-		std::cout << "Body -> GetAngle(): " << paddle->body->GetAngle() << std::endl;
 	
 
 		for (Block wall : walls)
@@ -224,6 +218,8 @@ int main(void)
 	g_cursorActive = NULL;
 	delete[] g_cursorXPos;
 	g_cursorXPos = NULL;
+	delete ball;
+	ball = NULL;
 	delete paddle;
 	paddle = NULL;
 
@@ -280,7 +276,7 @@ void createBlocks(std::vector<Block> &blocks, b2World &world)
 			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
 			blocks.back().body->SetGravityScale(1.0f);
 			blocks.back().setName("Block", count);
-			std::cout << blocks.back().getName() << std::endl;
+			blocks.back().body->SetUserData(&blocks.back());
 			count++;
 		}
 		ypos = 0.90f; //Reset Y Co-ord for each full iteration of nested loop
@@ -294,7 +290,6 @@ static void cursorEnterCallback(GLFWwindow* window, int entered)
 	if (entered)
 	{
 		*g_cursorActive = true;
-		std::cout << "Entered" << std::endl;
 	}
 	else {
 		*g_cursorActive = false;

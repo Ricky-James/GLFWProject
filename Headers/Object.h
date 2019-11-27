@@ -11,15 +11,13 @@
 class Object
 {
 private:
-	struct Userdata {
-		std::string name;
-	};
-
+	
+protected:
+	
 
 public:
 
-	Userdata userdata;
-
+	std::string* name;
 	Vector2 pos;
 	float angle;
 	float width;
@@ -34,13 +32,8 @@ public:
 	virtual void draw() = 0;
 	void setColours(int r, int g, int b); //For values 0-255, converts to 0-1
 	void setColours(float r, float g, float b); //For values 0-1
-	void setName(std::string _name);
-
-	virtual const std::string getName()
-	{
-		return userdata.name;
-	}
-
+	virtual void setName(std::string _name);
+	std::string getName() { return *name; }
 
 	virtual const Vector2 getPos()
 	{

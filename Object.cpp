@@ -27,5 +27,5 @@ void Object::setColours(float r, float g, float b) //Values between 0-1
 void Object::setName(std::string _name)
 {
 	assert(_name.length() > 0);
-	userdata.name = _name;
+	*name = _name;
 }

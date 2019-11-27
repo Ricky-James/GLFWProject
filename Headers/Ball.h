@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 #include <math.h>
 #include <Box2D/Box2D.h>
-#include <string>
 #include "Headers/Object.h"
 
 class Ball : public virtual Object
@@ -11,11 +10,7 @@ class Ball : public virtual Object
 private:
 
 	const float radius = 0.05f;
-
 	b2CircleShape circleShape;
-	
-	
-	
 
 public:
 
@@ -25,7 +20,9 @@ public:
 
 	Ball()
 	{
+		contacting = false;
 		
+		name = new std::string();
 		setName("Ball");
 
 		pos.x = 0; 
@@ -36,10 +33,10 @@ public:
 		colour[2] = 255;
 
 		
-
+		
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_dynamicBody;
-		bodyDef.linearDamping = 1.0f;
+		bodyDef.linearDamping = 10.0f;
 		bodyDef.angularDamping = 0.1f;
 		//bodyDef.fixedRotation = true;
 		bodyDef.allowSleep = false;
@@ -52,8 +49,13 @@ public:
 		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;
 		
-		//body->SetUserData( this );
 
+
+	}
+	~Ball() {
+		delete name;
+		name = NULL;
+		
 	}
 
 	

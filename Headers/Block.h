@@ -10,6 +10,7 @@ private:
 public:
 	Block(float x, float y, float width, float height, b2BodyType type) {
 
+		name = new std::string();
 		pos.x = x;
 		pos.y = y;
 		this->width = width;
@@ -25,7 +26,6 @@ public:
 		shape.SetAsBox(width / 2, height / 2);
 
 		//Fixture
-
 		fixtureDef.shape = &shape; //Attach shape & body
 		fixtureDef.density = 0.1f;
 		fixtureDef.friction = 0;
@@ -53,7 +53,7 @@ public:
 		bodyDef.type = b2_dynamicBody;
 	}
 
-	void setName(std::string _name, int count);
+	void setName(std::string _name, int count); //Appends a number to the name of each block
 
 	const b2PolygonShape getShape() {
 		return shape;

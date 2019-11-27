@@ -3,11 +3,11 @@
 void Paddle::draw()
 {
 
-	b2Vec2 center = this->body->GetPosition();
-	float32 angle = this->body->GetAngle();
+	b2Vec2 center = body->GetPosition();
+	float32 angle = body->GetAngle();
 
 	glMatrixMode(GL_MODELVIEW);
-	glColor3f(this->colour[0], this->colour[1], this->colour[2]);
+	glColor3f(colour[0], colour[1], colour[2]);
 
 	glPushMatrix();             // save the current GL_MODELVIEW matrix 
 	{
