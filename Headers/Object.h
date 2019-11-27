@@ -11,9 +11,20 @@
 class Object
 {
 private:
-	
+
+
 protected:
-	
+	Object()
+	{
+		name = NULL;
+		pos.set (0, 0);
+		angle = 0;
+		width = 0;
+		height = 0;
+		setColours(0, 0, 0);
+		body = NULL;
+		
+	}
 
 public:
 

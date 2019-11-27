@@ -36,7 +36,7 @@ public:
 		
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_dynamicBody;
-		bodyDef.linearDamping = 10.0f;
+		bodyDef.linearDamping = 1.0f;
 		bodyDef.angularDamping = 0.1f;
 		//bodyDef.fixedRotation = true;
 		bodyDef.allowSleep = false;

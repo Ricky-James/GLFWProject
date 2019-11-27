@@ -12,7 +12,7 @@ void Paddle::draw()
 	glPushMatrix();             // save the current GL_MODELVIEW matrix 
 	{
 		glTranslatef(center.x, center.y, 0.0f);
-		glRotatef(angle * RAD2DEG, 0, 0, 1);  // rotate object
+		glRotatef(((GLfloat)angle) * RAD2DEG, 0, 0, 1);  // rotate object
 		glTranslatef(-center.x, -center.y, 0.0f);
 
 	}
@@ -50,7 +50,7 @@ void Paddle::updateRotation()
 
 }
 
-float Paddle::getRotation()
+double Paddle::getRotation()
 {
 	return rotation;
 }
@@ -67,7 +67,7 @@ void Paddle::updatePosition(float x) //Takes in mouse input
 	{
 		y = (pos.y + (x * -1) / 5); //Changes x to positive
 	}
-	body->SetTransform(b2Vec2(x, y), rotation);
+	body->SetTransform(b2Vec2(x, y), (float32)(rotation));
 	
 		
 

@@ -7,7 +7,7 @@ class Paddle : public virtual Object
 private:
 
 	b2PolygonShape shape;
-	float rotation;
+	double rotation;
 	float const maxRotate = 30;
 
 public:
@@ -49,7 +49,7 @@ public:
 	void draw() override;
 	void updateRotation();
 
-	float getRotation(); //Sets rotation according to body xPos and returns new value
+	double getRotation(); //Sets rotation according to body xPos and returns new value
 	void updatePosition(float x);
 	const b2PolygonShape getShape() {
 		return shape;

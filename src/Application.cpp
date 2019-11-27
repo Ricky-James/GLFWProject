@@ -106,7 +106,7 @@ int main(void)
 	Ball* ball = new Ball();
 	ball->body = world->CreateBody(&ball->bodyDef);
 	ball->body->CreateFixture(&ball->getShape(), 1.0f);
-	ball->body->SetGravityScale(1.0f);
+	ball->body->SetGravityScale(0.2f);
 	ball->body->SetUserData(&ball->getName());
 	
 
@@ -127,9 +127,9 @@ int main(void)
 
 	for (std::vector<Block>::iterator itr = walls.begin(); itr != walls.end(); itr++)
 	{
-		int index = std::distance(walls.begin(), itr);
+		__int64 index = std::distance(walls.begin(), itr);
 		Block *currentWall = &walls.at(index);
-		currentWall->setName("Wall", std::distance(walls.begin(), itr + 1));
+		currentWall->setName("Wall", static_cast<int>(std::distance(walls.begin(), itr + 1)));
 		currentWall->body = world->CreateBody(&currentWall->bodyDef);
 		currentWall->body->CreateFixture(&currentWall->getShape(), 1.0f);
 		currentWall->body->SetGravityScale(1.0f);
@@ -309,7 +309,7 @@ void updatePaddlePos(GLFWwindow* window, Paddle& paddle)
 {
 	//Update xpos of both glfw and b2body
 	if (g_cursorActive) {
-		paddle.updatePosition(*g_cursorXPos);
+		paddle.updatePosition((float)*g_cursorXPos);
 	}
 }
 

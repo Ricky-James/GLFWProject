@@ -3,43 +3,28 @@
 #include "Ball.h"
 #include <iostream>
 
-class Collision :
-	public b2ContactListener
+class Collision : public b2ContactListener
 {
+private:
+	b2Vec2 oldVelocity;
 
-	void BeginContact(b2Contact* contact) {
-
-		//check if fixture A was a ball
-		void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
-		if (bodyUserData)
-			static_cast<Ball*>(bodyUserData)->startContact();
-
-		//check if fixture B was a ball
-		bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
-		if (bodyUserData)
-			static_cast<Ball*>(bodyUserData)->startContact();
-		
-		std::cout << "Collision detected" << std::endl;
-
-		std::cout << "Fixturee A: " << (contact->GetFixtureA()->GetUserData()) << std::endl;
-		std::cout << "Fixturee B: " << (contact->GetFixtureB()->GetUserData()) << std::endl;
-		contact->GetFixtureB()->GetBody()->ApplyForce(b2Vec2(0.0f, 3.0f),
-			contact->GetFixtureB()->GetBody()->GetLocalCenter(), true);
+	Collision()
+	{
+		oldVelocity.SetZero();
 	}
+public:
 
-	void EndContact(b2Contact* contact) {
+	
 
-		//check if fixture A was a ball
-		void* bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
-		if (bodyUserData)
-			static_cast<Ball*>(bodyUserData)->endContact();
+	void BeginContact(b2Contact* contact);
+	void EndContact(b2Contact* contact);
+	void PreSolve(b2Contact* contact);
+	void PostSolve(b2Contact* contact);
 
-		//check if fixture B was a ball
-		bodyUserData = contact->GetFixtureB()->GetBody()->GetUserData();
-		if (bodyUserData)
-			static_cast<Ball*>(bodyUserData)->endContact();
 
-	}
+
+
+
 
 };
 
