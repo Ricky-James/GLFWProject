@@ -107,7 +107,7 @@ int main(void)
 	ball->body = world->CreateBody(&ball->bodyDef);
 	ball->body->CreateFixture(&ball->getShape(), 1.0f);
 	ball->body->SetGravityScale(0.2f);
-	ball->body->SetUserData(&ball->getName());
+	ball->body->SetUserData(ball);
 	
 
 	Paddle* paddle = new Paddle();
