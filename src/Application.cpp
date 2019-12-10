@@ -19,10 +19,6 @@
 bool* g_cursorActive = new bool();
 double* g_cursorXPos = new double();
 
-//Just for debugging really
-bool step = true;
-
-void createBlocks(std::vector<Block> &blocks, b2World &world);
 
 
 //Input callbacks
@@ -31,8 +27,12 @@ static void cursorPositionCallback(GLFWwindow* window, double x, double y);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void updatePaddlePos(GLFWwindow* window, Paddle& paddle);
 
+//Simple conversion functions
 Vector2 box2glfw(b2Vec2 boxPos);
 b2Vec2 glfw2box(Vector2 glfwPos);
+
+std::vector<Block> createBlocks(b2World& world);
+
 
 int main(void)
 {
@@ -90,8 +90,6 @@ int main(void)
 	//b2Contact Listener for collision detection
 	Collision *collider = new Collision();
 	world->SetContactListener(collider);
-	
-	
 
 
 	float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
@@ -107,14 +105,15 @@ int main(void)
 	ball->body = world->CreateBody(&ball->bodyDef);
 	ball->body->CreateFixture(&ball->getShape(), 1.0f);
 	ball->body->SetGravityScale(0.2f);
-	ball->body->SetUserData(ball);
-	
+	ball->body->SetUserData(ball->objectInfo);
+
 
 	Paddle* paddle = new Paddle();
 	paddle->body = world->CreateBody(&paddle->bodyDef);
 	paddle->body->CreateFixture(&paddle->getShape(), 1.0f);
 	paddle->body->SetGravityScale(1.0f);
-	paddle->body->SetUserData(paddle);
+	paddle->body->SetUserData(paddle->objectInfo);
+
 
 	//Assigning position and sizes of walls for boundaries
 	//left/right/top/bottom.
@@ -134,23 +133,22 @@ int main(void)
 		currentWall->body->CreateFixture(&currentWall->getShape(), 1.0f);
 		currentWall->body->SetGravityScale(1.0f);
 		currentWall->setColours(235, 85, 52);
-		currentWall->body->SetUserData(currentWall);
+		currentWall->body->SetUserData(currentWall->objectInfo);
 	}
 
 
 
 
-	std::vector<Block> blocks;
+
 
 	//Instantiate blocks
-	createBlocks(blocks, *world);
+	std::vector<Block> blocks = createBlocks(*world);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
-		//Step toggled by pressing R
-		if (step)
-			world->Step(timeStep, velocityIterations, positionIterations);
+		//Step forward once per loop iteration
+		world->Step(timeStep, velocityIterations, positionIterations);
 
 
 		/* Setup view: */
@@ -158,12 +156,10 @@ int main(void)
 		glClearColor(0.2f, 0.1f, 0.1f, 1.0f); //Background colour
 
 
+		/* Resolve any collisions */
+
+
 		/* Render here */
-
-
-		
-
-		//Drawing
 
 		//Ball
 		ball->setPos(ball->body->GetPosition());
@@ -242,26 +238,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		exit(EXIT_SUCCESS);
 	}
 
-	if (key == GLFW_KEY_R && action == GLFW_PRESS) //Basic pause/unpause
-	{
-		step = !step;
-		
-	}
-
-	if (key == GLFW_KEY_T && action == GLFW_PRESS)
-	{
-		//ball.ballToPaddle(b2Vec2(1.0f, 3.0f));
-
-	}	
-	if (key == GLFW_KEY_E && action == GLFW_PRESS)
-	{
-		//ball.ballToPaddle(b2Vec2(-1.0f, 3.0f));
-	}
 
 }
 
-void createBlocks(std::vector<Block> &blocks, b2World &world)
+std::vector<Block> createBlocks(b2World &world)
 {
+	std::vector<Block> blocks;
+
 	float xpos = -0.82f; //Starting co-ords
 	float ypos = 0.90f;
 	int count = 0;
@@ -276,12 +259,15 @@ void createBlocks(std::vector<Block> &blocks, b2World &world)
 			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
 			blocks.back().body->SetGravityScale(1.0f);
 			blocks.back().setName("Block", count);
-			blocks.back().body->SetUserData(&blocks.back());
+			blocks.back().body->SetUserData(&blocks.back().objectInfo);
+			
 			count++;
 		}
 		ypos = 0.90f; //Reset Y Co-ord for each full iteration of nested loop
 		xpos += 0.27f;
 	}
+
+	return blocks;
 }
 
 

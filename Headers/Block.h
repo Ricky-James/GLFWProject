@@ -8,9 +8,10 @@ private:
 	b2PolygonShape shape;
 
 public:
+
+
 	Block(float x, float y, float width, float height, b2BodyType type) {
 
-		name = new std::string();
 		pos.x = x;
 		pos.y = y;
 		this->width = width;

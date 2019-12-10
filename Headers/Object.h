@@ -7,6 +7,13 @@
 #define RAD2DEG 57.2958 
 #define DEG2RAD 0.0174533
 
+//Information used to identify objects in collisions
+struct objectUserData
+{
+	std::string name;
+	bool colliding;
+};
+
 //Abstract class for all defined objects
 class Object
 {
@@ -16,7 +23,7 @@ private:
 protected:
 	Object()
 	{
-		name = NULL;
+		objectInfo->name = "NULL. Unknown Object Name.";
 		pos.set (0, 0);
 		angle = 0;
 		width = 0;
@@ -28,7 +35,9 @@ protected:
 
 public:
 
-	std::string* name;
+
+
+	objectUserData* objectInfo = new objectUserData();
 	Vector2 pos;
 	float angle;
 	float width;
@@ -44,7 +53,7 @@ public:
 	void setColours(int r, int g, int b); //For values 0-255, converts to 0-1
 	void setColours(float r, float g, float b); //For values 0-1
 	virtual void setName(std::string _name);
-	std::string getName() { return *name; }
+	std::string getName() { return objectInfo->name; }
 
 	virtual const Vector2 getPos()
 	{

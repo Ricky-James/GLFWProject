@@ -16,14 +16,12 @@ public:
 
 	b2BodyDef bodyDef;
 	b2Body* body;
-	bool contacting;
 
 	Ball()
 	{
-		contacting = false;
-		
-		name = new std::string();
-		setName("Ball");
+
+		objectInfo->name = "Ball";
+		objectInfo->colliding = false;
 
 		pos.x = 0; 
 		pos.y = 0;
@@ -32,7 +30,7 @@ public:
 		colour[1] = 255;
 		colour[2] = 255;
 
-		
+
 		
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_dynamicBody;
@@ -53,8 +51,8 @@ public:
 
 	}
 	~Ball() {
-		delete name;
-		name = NULL;
+		delete objectInfo;
+		objectInfo = NULL;
 		
 	}
 
@@ -68,10 +66,6 @@ public:
 	const b2CircleShape getShape();
 
 	void ballToPaddle(b2Vec2 force);
-
-	void startContact() { contacting = true; }
-
-	void endContact() { contacting = false; }
 
 	
 };

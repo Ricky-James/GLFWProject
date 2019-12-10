@@ -1,7 +1,5 @@
 #include "Headers/Object.h"
 
-
-
 void Object::setColours(int r, int g, int b) //Values between 0-255
 {
 	assert(r >= 0, g >= 0, b >= 0);
@@ -27,5 +25,5 @@ void Object::setColours(float r, float g, float b) //Values between 0-1
 void Object::setName(std::string _name)
 {
 	assert(_name.length() > 0);
-	*name = _name;
+	objectInfo->name = _name;
 }
