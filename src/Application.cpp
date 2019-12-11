@@ -31,6 +31,7 @@ void updatePaddlePos(GLFWwindow* window, Paddle& paddle);
 Vector2 box2glfw(b2Vec2 boxPos);
 b2Vec2 glfw2box(Vector2 glfwPos);
 
+//Function that creates all breakable blocks
 std::vector<Block> createBlocks(b2World& world);
 
 
@@ -105,7 +106,7 @@ int main(void)
 	ball->body = world->CreateBody(&ball->bodyDef);
 	ball->body->CreateFixture(&ball->getShape(), 1.0f);
 	ball->body->SetGravityScale(0.2f);
-	ball->body->SetUserData(ball->objectInfo);
+	ball->body->SetUserData(ball);
 
 
 	Paddle* paddle = new Paddle();
@@ -178,17 +179,21 @@ int main(void)
 		for (Block wall : walls)
 		{
 			wall.draw(); //unnecessary to draw, drawing for debug purposes
+			wall.objectInfo->colliding = false;
 		}
 
-		//Iterator for drawing blocks.
 		//Popping blocks will cut them from being drawn.
-		for (Block block : blocks)
+		for (int i = 0; i < blocks.size(); i++)
 		{		
-			block.pos = box2glfw(block.body->GetPosition());
-			
-			//TODO Check if box pos.y is < -1, pop from vec and delete if so.
-			
-			block.draw();
+			blocks[i].pos = box2glfw(blocks[i].body->GetPosition());
+			//Check if box pos.y is < -1, pop from vec and delete if so.
+			//Current WIP figuring out how tf to do this.
+			if (blocks[i].getPos().y < -1.5f)
+			{
+				blocks.erase(blocks[i]);
+			}
+
+			blocks[i].draw();
 			
 
 		}

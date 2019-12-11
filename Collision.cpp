@@ -9,8 +9,11 @@ void Collision::BeginContact(b2Contact* contact) {
 	contact->GetFixtureB()->GetBody()->SetLinearVelocity(b2Vec2(0, 0));
 
 	//Cast the void pointer back to its correct type
-	objectUserData* colA = static_cast<objectUserData*>(contact->GetFixtureA()->GetBody()->GetUserData());
-	objectUserData* colB = static_cast<objectUserData*>(contact->GetFixtureB()->GetBody()->GetUserData());
+	//objectUserData* colA = static_cast<objectUserData*>(contact->GetFixtureA()->GetBody()->GetUserData());
+	//objectUserData* colB = static_cast<objectUserData*>(contact->GetFixtureB()->GetBody()->GetUserData());
+
+	objectUserData* colA = (objectUserData*)(contact->GetFixtureA()->GetBody()->GetUserData());
+	objectUserData* colB = (objectUserData*)(contact->GetFixtureB()->GetBody()->GetUserData());
 
 	//TODO
 	//Make force new velocity
@@ -18,6 +21,8 @@ void Collision::BeginContact(b2Contact* contact) {
 	colA->colliding = true;
 	colB->colliding = true;
 
+	
+	
 
 
 }
