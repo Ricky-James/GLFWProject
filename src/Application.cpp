@@ -127,7 +127,7 @@ int main(void)
 
 	for (std::vector<Block>::iterator itr = walls.begin(); itr != walls.end(); itr++)
 	{
-		__int64 index = std::distance(walls.begin(), itr);
+		int index = std::distance(walls.begin(), itr);
 		Block *currentWall = &walls.at(index);
 		currentWall->setName("Wall", static_cast<int>(std::distance(walls.begin(), itr + 1)));
 		currentWall->body = world->CreateBody(&currentWall->bodyDef);
@@ -190,7 +190,8 @@ int main(void)
 			//Current WIP figuring out how tf to do this.
 			if (blocks[i].getPos().y < -1.5f)
 			{
-				blocks.erase(blocks[i]);
+				//Erase blocks if they fall far off screen
+				blocks.erase(blocks.begin() + i);
 			}
 
 			blocks[i].draw();
