@@ -226,7 +226,6 @@ int main(void)
 			{
 				//Erase blocks if they fall far off screen
 				delete blocks[i];
-				blocks[i] = NULL;
 				blocks.erase(blocks.begin() + i);
 				if (blocks.empty())
 				{

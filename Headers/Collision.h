@@ -8,11 +8,7 @@
 
 class Collision : public b2ContactListener
 {
-private:
-	b2Vec2 oldVelocity;
 public:
-
-	
 
 	void BeginContact(b2Contact* contact);
 	void EndContact(b2Contact* contact);
