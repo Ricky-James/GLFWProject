@@ -106,6 +106,16 @@ int main(void)
 	paddle->body->SetGravityScale(1.0f);
 	paddle->body->SetUserData(paddle);
 
+	//Kind of a wall, spinning object in the middle
+	Paddle* blockerA = new Paddle();
+	blockerA->body = world->CreateBody(&blockerA->bodyDef);
+	blockerA->body->CreateFixture(&blockerA->getShape(), 1.0f);
+	blockerA->setColours(235, 85, 0);
+	blockerA->setObjectType(4);
+	blockerA->body->SetUserData(blockerA);
+	blockerA->body->SetTransform(b2Vec2(0, 0), 0);
+
+
 	std::vector<Block*> blocks;
 	{
 		float xpos = -0.82f; //Starting co-ords
@@ -198,11 +208,12 @@ int main(void)
 		ball->draw();
 
 		//Paddle drawing
-		//Paddle rotation changes in accordance with X position
-		//paddle->updateRotation();
 		//Position updated in mouse callback
 		paddle->draw();
 
+		//Blocker paddle spins and moves left to right
+		blockerA->SpinMove();
+		blockerA->draw();
 	
 
 		for (Block* wall : walls)
@@ -225,7 +236,12 @@ int main(void)
 			if (blocks[i]->body->GetPosition().y < -1.1f)
 			{
 				//Erase blocks if they fall far off screen
+				//Destroy assosciated body
+				world->DestroyBody(blocks[i]->body);
+
+				//Erasing blocks currently occassionally causes exceptions and I can't debug it
 				delete blocks[i];
+				blocks[i] = NULL;
 				blocks.erase(blocks.begin() + i);
 				if (blocks.empty())
 				{

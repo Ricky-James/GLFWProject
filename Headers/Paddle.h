@@ -7,17 +7,18 @@ class Paddle : public virtual Object
 private:
 
 	b2PolygonShape shape;
-	double rotation;
-	float const maxRotate = 30;
-
+	int objType;
+	bool movingRight = true; //Used for spin paddle only
+	const float spinSpeed = 2.0f;
 public:
 
 	Paddle() //Mostly see block constructor for comments
 	{
+		movingRight = true;
+		objType = PADDLE;
 		pos.y = -0.875f;
 		width = 0.3f; //half of actual width
 		height = 0.04f;
-		rotation = 0;
 		colour[0] = 0.6f;
 		colour[1] = 0;
 		colour[2] = 0.6f;
@@ -28,11 +29,12 @@ public:
 		bodyDef.allowSleep = false; //Stops blocks from sleeping if they fall onto the paddle
 
 		shape.SetAsBox(width/2, height/2);
-		
+
+		bodyDef.angularDamping = 5.0f;
 
 		fixtureDef.shape = &shape;
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0;
+		fixtureDef.density = 2.0f;
+		fixtureDef.friction = 1.0f;
 		fixtureDef.restitution = 1.0f;
 
 	}
@@ -40,12 +42,14 @@ public:
 	{
 
 	}
-	
+	void setObjectType(int type) {
+		objType = type;
+	}
 	void draw() override;
-	int objectType() override { return PADDLE; }
-	//void updateRotation();
+	int objectType() override { return objType; }
+	void SpinMove();
 
-	double getRotation(); //Sets rotation according to body xPos and returns new value
+	
 	void updatePosition(float x);
 	const b2PolygonShape getShape() {
 		return shape;

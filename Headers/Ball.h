@@ -12,11 +12,10 @@ private:
 
 	const float radius = 0.05f;
 	b2CircleShape circleShape;
-	int lives;
 
 public:
 
-	int objectType() {
+	int objectType() override {
 		return BALL;
 	}
 
@@ -33,7 +32,6 @@ public:
 
 	Ball()
 	{
-		lives = 3;
 		hasCollided = false;
 		colour[0] = 255;
 		colour[1] = 255;

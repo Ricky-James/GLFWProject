@@ -42,17 +42,24 @@ void Paddle::draw()
 
 }
 
-//void Paddle::updateRotation()
-//{
-//	//X range is -1 to 1
-//	//Rotation should be between maxRotate range (-maxRotate to maxRotate linearly)
-//	rotation = (body->GetPosition().x * maxRotate) * DEG2RAD;
-//
-//}
-
-double Paddle::getRotation()
+void Paddle::SpinMove()
 {
-	return rotation;
+	if (movingRight)
+	{
+		pos.x += 0.003f;
+		if (pos.x >= 1)
+			movingRight = false;
+	}
+	else {
+		pos.x -= 0.003f;
+		if (pos.x <= -1)
+			movingRight = true;
+	}
+
+
+	body->SetTransform(b2Vec2(pos.x, body->GetPosition().y), body->GetAngle() + spinSpeed * DEG2RAD);		
+
+
 }
 
 void Paddle::updatePosition(float x) //Takes in mouse input
@@ -67,13 +74,8 @@ void Paddle::updatePosition(float x) //Takes in mouse input
 	{
 		y = (pos.y + (x * -1) / 5); //Changes x to positive
 	}
-	body->SetTransform(b2Vec2(x, y), (float32)(rotation));
-	
+	body->SetTransform(b2Vec2(x, y), 0);
 		
-
-	
-
-	
 }
 
 

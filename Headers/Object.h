@@ -60,17 +60,3 @@ public:
 
 };
 
-class Entity : public Object
-{
-public:
-
-	Entity()
-	{
-		body->SetUserData(this);
-	}
-
-	int objectType() {
-		return 0;
-	}
-};
-

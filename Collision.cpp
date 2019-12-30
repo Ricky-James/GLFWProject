@@ -9,9 +9,9 @@ void Collision::BeginContact(b2Contact* contact) {
 	void* objectB = contact->GetFixtureB()->GetBody()->GetUserData();
 
 		
-	//Ball cast temporarily used to determine object type
-	Ball* objA = static_cast<Ball*>(objectA);
-	Ball* objB = static_cast<Ball*>(objectB);
+	//Paddle cast temporarily used to determine object type
+	Paddle* objA = static_cast<Paddle*>(objectA);
+	Paddle* objB = static_cast<Paddle*>(objectB);
 
 	//Pointers created to be set to outside of switch scope
 	Ball* ball = nullptr;
@@ -19,55 +19,60 @@ void Collision::BeginContact(b2Contact* contact) {
 	Block* block = nullptr;
 	Block* wall = nullptr;
 
+	
 	//Cast object A to its actual type
-	if (objA != nullptr && objB != nullptr)
+	switch (objA->objectType())
 	{
-		switch (objA->objectType())
-		{
-		case 1:
-			ball = static_cast<Ball*>(objectA);
-			break;
-		case 2:
-			paddle = static_cast<Paddle*>(objectA);
-			break;
-		case 3:
-			block = static_cast<Block*>(objectA);
-			break;
-		case 4:
-			wall = static_cast<Block*>(objectA);
-			break;
-		}
-		//Cast object B
-		switch (objB->objectType())
-		{
-		case 1:
-			ball = static_cast<Ball*>(objectB);
-			break;
-		case 2:
-			paddle = static_cast<Paddle*>(objectB);
-			break;
-		case 3:
-			block = static_cast<Block*>(objectB);
-			break;
-		case 4:
-			wall = static_cast<Block*>(objectB);
-			break;
-		}
-
-
-
-		//If ball and block collide
-		if (ball && block)
-		{
-			block->collision();
-
-		}
-
-		if (ball && paddle)
-		{
-			ball->hasCollided = true;
-		}
+	case 1:
+		ball = static_cast<Ball*>(objectA);
+		break;
+	case 2:
+		paddle = static_cast<Paddle*>(objectA);
+		break;
+	case 3:
+		block = static_cast<Block*>(objectA);
+		break;
+	case 4:
+		wall = static_cast<Block*>(objectA);
+		break;
+	default:
+		break;
 	}
+
+	//Cast object B
+	switch (objA->objectType())
+	{
+	case 1:
+		ball = static_cast<Ball*>(objectB);
+		break;
+	case 2:
+		paddle = static_cast<Paddle*>(objectB);
+		break;
+	case 3:
+		block = static_cast<Block*>(objectB);
+		break;
+	case 4:
+		wall = static_cast<Block*>(objectB);
+		break;
+	default:
+		break;
+	}
+	
+
+
+
+	//If ball and block collide
+	if (ball && block)
+	{
+		block->collision();
+
+	}
+
+	if (ball && paddle)
+	{
+		ball->hasCollided = true;
+	}
+
 
 
 
