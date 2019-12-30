@@ -18,55 +18,57 @@ void Collision::BeginContact(b2Contact* contact) {
 	Paddle* paddle = nullptr;
 	Block* block = nullptr;
 	Block* wall = nullptr;
-	//Debug assistance
-	//std::cout << "Object A Type: " << objA->objectType() << std::endl;
-	//std::cout << "Object B Type: " << objB->objectType() << std::endl;
+
 	//Cast object A to its actual type
-	switch (objA->objectType())
-	{ 
-	case 1:
-		ball = static_cast<Ball*>(objectA);
-		break;
-	case 2: 
-		paddle = static_cast<Paddle*>(objectA);
-		break;
-	case 3: 
-		block = static_cast<Block*>(objectA);
-		break;
-	case 4: 
-		wall = static_cast<Block*>(objectA);
-		break;
-	}
-	//Cast object B
-	switch (objB->objectType())
+	if (objA != nullptr && objB != nullptr)
 	{
-	case 1:
-		ball = static_cast<Ball*>(objectB);
-		break;
-	case 2:
-		paddle = static_cast<Paddle*>(objectB);
-		break;
-	case 3: 
-		block = static_cast<Block*>(objectB);
-		break;
-	case 4: 
-		wall = static_cast<Block*>(objectB);
-		break;
+		switch (objA->objectType())
+		{
+		case 1:
+			ball = static_cast<Ball*>(objectA);
+			break;
+		case 2:
+			paddle = static_cast<Paddle*>(objectA);
+			break;
+		case 3:
+			block = static_cast<Block*>(objectA);
+			break;
+		case 4:
+			wall = static_cast<Block*>(objectA);
+			break;
+		}
+		//Cast object B
+		switch (objB->objectType())
+		{
+		case 1:
+			ball = static_cast<Ball*>(objectB);
+			break;
+		case 2:
+			paddle = static_cast<Paddle*>(objectB);
+			break;
+		case 3:
+			block = static_cast<Block*>(objectB);
+			break;
+		case 4:
+			wall = static_cast<Block*>(objectB);
+			break;
+		}
+
+
+
+		//If ball and block collide
+		if (ball && block)
+		{
+			block->collision();
+
+		}
+
+		if (ball && paddle)
+		{
+			ball->hasCollided = true;
+		}
 	}
 
-
-
-	//If ball or a block collide with a block
-	if (ball && block || objA->objectType() == BLOCK && objB->objectType() == BLOCK)
-	{
-		block->collision();
-
-	}
-
-	if (ball && paddle)
-	{
-		ball->hasCollided = true;
-	}
 
 
 

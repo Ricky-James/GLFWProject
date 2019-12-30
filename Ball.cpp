@@ -36,5 +36,13 @@ const b2CircleShape Ball::getShape() {
 	return circleShape;
 }
 
+void Ball::resetPos()
+{
+	//Easy to implement a life system here
+	//No current system to display it so leaving it out for now
+	this->body->SetLinearVelocity(b2Vec2_zero);
+	this->body->SetTransform(b2Vec2_zero, 0);
+}
+
 
 

@@ -42,13 +42,13 @@ void Paddle::draw()
 
 }
 
-void Paddle::updateRotation()
-{
-	//X range is -1 to 1
-	//Rotation should be between maxRotate range (-maxRotate to maxRotate linearly)
-	rotation = (body->GetPosition().x * maxRotate) * DEG2RAD;
-
-}
+//void Paddle::updateRotation()
+//{
+//	//X range is -1 to 1
+//	//Rotation should be between maxRotate range (-maxRotate to maxRotate linearly)
+//	rotation = (body->GetPosition().x * maxRotate) * DEG2RAD;
+//
+//}
 
 double Paddle::getRotation()
 {

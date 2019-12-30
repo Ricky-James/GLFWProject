@@ -138,22 +138,21 @@ int main(void)
 	//Assigning position and sizes of walls for boundaries
 	//left/right/top/bottom.
 	//May decide to purge the bottom and/or top barrier later
-	std::vector<Block> walls;
-	walls.push_back(Block(-1, 0, 0.05f, 2.0f  , b2_kinematicBody));
-	walls.push_back(Block(1 , 0, 0.05f, 2.0f  , b2_kinematicBody));
-	walls.push_back(Block(0 , 1, 2.0f , 0.05f , b2_kinematicBody));
+	std::vector<Block*> walls;
+	walls.push_back(new Block(-1, 0, 0.05f, 2.0f  , b2_kinematicBody));
+	walls.push_back(new Block(1 , 0, 0.05f, 2.0f  , b2_kinematicBody));
+	walls.push_back(new Block(0 , 1, 2.0f , 0.05f , b2_kinematicBody));
 	//walls.push_back(Block(0 , -1, 2.0f , 0.05f, b2_kinematicBody));
 
-	for (std::vector<Block>::iterator itr = walls.begin(); itr != walls.end(); itr++)
+	for (std::vector<Block*>::iterator itr = walls.begin(); itr != walls.end(); itr++)
 	{
 		int index = std::distance(walls.begin(), itr);
-		Block *currentWall = &walls.at(index);
-		currentWall->body = world->CreateBody(&currentWall->bodyDef);
-		currentWall->body->CreateFixture(&currentWall->getShape(), 1.0f);
-		currentWall->body->SetGravityScale(1.0f);
-		currentWall->setColours(235, 85, 52);
-		currentWall->typeNumber = 4;
-		currentWall->body->SetUserData(currentWall);
+
+		walls.at(index)->body = world->CreateBody(&walls.at(index)->bodyDef);
+		walls.at(index)->body->CreateFixture(&walls.at(index)->getShape(), 1.0f);
+		walls.at(index)->setColours(235, 85, 52);
+		walls.at(index)->typeNumber = 4;
+		walls.at(index)->body->SetUserData(walls.at(index));
 	}
 
 	double previousTime = glfwGetTime();
@@ -167,6 +166,7 @@ int main(void)
 
 		///Using https://gameprogrammingpatterns.com/game-loop.html
 		//Time system keeps framerate and updates consistent between machines
+		//Best to iterate calculations BEFORE making any other physics changes
 		double currentTime = glfwGetTime();
 		double elapsedTime = currentTime - previousTime;
 		previousTime = currentTime;
@@ -199,15 +199,15 @@ int main(void)
 
 		//Paddle drawing
 		//Paddle rotation changes in accordance with X position
-		paddle->updateRotation();
+		//paddle->updateRotation();
 		//Position updated in mouse callback
 		paddle->draw();
 
 	
 
-		for (Block wall : walls)
+		for (Block* wall : walls)
 		{
-			wall.draw(); //unnecessary to draw, drawing for debug purposes
+			wall->draw(); //unnecessary to draw, drawing for debug purposes
 		}
 
 		//Popping blocks will cut them from being drawn.
@@ -225,21 +225,27 @@ int main(void)
 			if (blocks[i]->body->GetPosition().y < -1.1f)
 			{
 				//Erase blocks if they fall far off screen
+				delete blocks[i];
+				blocks[i] = NULL;
 				blocks.erase(blocks.begin() + i);
+				if (blocks.empty())
+				{
+					//Win condition
+				}
 			}
 		}
 
 
-		if (blocks.empty())
-		{
-			exit(-1);
-		}
+
+
+		//Reset ball if it falls too far
+		if (ball->body->GetPosition().y < -2.0f)
+			ball->resetPos();
 		
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
 		/* Poll for and process events */
-
 		updatePaddlePos(window, *paddle);
 		glfwPollEvents();
 

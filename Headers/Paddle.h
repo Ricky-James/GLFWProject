@@ -43,7 +43,7 @@ public:
 	
 	void draw() override;
 	int objectType() override { return PADDLE; }
-	void updateRotation();
+	//void updateRotation();
 
 	double getRotation(); //Sets rotation according to body xPos and returns new value
 	void updatePosition(float x);
