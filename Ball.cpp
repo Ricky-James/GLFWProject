@@ -1,7 +1,5 @@
 #include "Headers/Ball.h"
 
-
-
 void Ball::draw() {
 	glBegin(GL_POLYGON);
 
@@ -22,13 +20,21 @@ void Ball::setPos(b2Vec2 b2pos)
 	pos.y = b2pos.y;
 }
 
+void Ball::paddleCollision(Paddle *paddle)
+{
+	//Calculate force
+	float xVelocity = this->body->GetPosition().x - paddle->body->GetPosition().x;
+	xVelocity *= 5;
+
+	float yVelocity = this->body->GetLinearVelocity().y * -1.2f + 2;
+
+	this->body->ApplyForce(b2Vec2(xVelocity, yVelocity), paddle->body->GetPosition(), true);
+	hasCollided = false;
+}
+
 const b2CircleShape Ball::getShape() {
 	return circleShape;
 }
 
-void Ball::ballToPaddle(b2Vec2 force)
-{
-	body->ApplyForce(force, body->GetPosition(), true);
-}
 
 

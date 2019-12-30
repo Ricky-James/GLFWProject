@@ -14,8 +14,6 @@ public:
 
 	Paddle() //Mostly see block constructor for comments
 	{
-		objectInfo->name = "Paddle";
-		pos.x = 0.f;
 		pos.y = -0.875f;
 		width = 0.3f; //half of actual width
 		height = 0.04f;
@@ -40,11 +38,11 @@ public:
 	}
 	~Paddle()
 	{
-		delete objectInfo;
-		objectInfo = NULL;
+
 	}
 	
 	void draw() override;
+	int objectType() override { return PADDLE; }
 	void updateRotation();
 
 	double getRotation(); //Sets rotation according to body xPos and returns new value

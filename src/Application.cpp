@@ -19,8 +19,6 @@
 bool* g_cursorActive = new bool();
 double* g_cursorXPos = new double();
 
-
-
 //Input callbacks
 static void cursorEnterCallback(GLFWwindow* window, int entered);
 static void cursorPositionCallback(GLFWwindow* window, double x, double y);
@@ -31,27 +29,20 @@ void updatePaddlePos(GLFWwindow* window, Paddle& paddle);
 Vector2 box2glfw(b2Vec2 boxPos);
 b2Vec2 glfw2box(Vector2 glfwPos);
 
-//Function that creates all breakable blocks
-std::vector<Block> createBlocks(b2World& world);
-
-
 int main(void)
 {
 	
 	GLFWwindow* window;
 
-	/* Initialize the library */
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
-
-	
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	
 
-	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(SCREENWIDTH, SCREENHEIGHT, "OpenGL Project", NULL, NULL);
+	// Create a windowed mode window and its OpenGL context
+	window = glfwCreateWindow(SCREENWIDTH, SCREENHEIGHT, "Box2D Project", NULL, NULL);
 	
 	
 
@@ -93,7 +84,7 @@ int main(void)
 	world->SetContactListener(collider);
 
 
-	float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
+	const float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
 
 	//Box2D suggests velo 8 or 6, pos 3 or 2. Fewer increases performances but accuracy suffers (box2d doc 2.4)
 	//Number of constraint iterations. completely unrelated to step count
@@ -113,7 +104,35 @@ int main(void)
 	paddle->body = world->CreateBody(&paddle->bodyDef);
 	paddle->body->CreateFixture(&paddle->getShape(), 1.0f);
 	paddle->body->SetGravityScale(1.0f);
-	paddle->body->SetUserData(paddle->objectInfo);
+	paddle->body->SetUserData(paddle);
+
+	std::vector<Block*> blocks;
+	{
+		float xpos = -0.82f; //Starting co-ords
+		float ypos = 0.90f;
+		for (int i = 0; i < 7; i++) //Iterating left to right
+		{
+			for (int n = 0; n < 5; n++) //Top to bottom
+			{
+				blocks.push_back(new Block(xpos, ypos, 0.24f, 0.04f, b2_staticBody)); //Add to vector at current co-ords
+				ypos -= 0.1f; //Reduce Y-coord for each iteration
+			}
+			ypos = 0.90f; //Reset Y Co-ord for each full iteration of nested loop
+			xpos += 0.27f;
+		}
+	}
+	for (std::vector<Block*>::iterator itr = blocks.begin(); itr != blocks.end(); itr++)
+	{
+		int index = std::distance(blocks.begin(), itr);
+
+		//Attach fixture to body and body to world. 1.0f dens.
+		blocks.at(index)->body = world->CreateBody(&blocks.at(index)->bodyDef);
+		blocks.at(index)->body->CreateFixture(&blocks.at(index)->getShape(), 0.1f);
+		blocks.at(index)->body->SetGravityScale(0.2f);
+		
+		blocks.at(index)->body->SetUserData(blocks.at(index));
+	}
+
 
 
 	//Assigning position and sizes of walls for boundaries
@@ -123,34 +142,47 @@ int main(void)
 	walls.push_back(Block(-1, 0, 0.05f, 2.0f  , b2_kinematicBody));
 	walls.push_back(Block(1 , 0, 0.05f, 2.0f  , b2_kinematicBody));
 	walls.push_back(Block(0 , 1, 2.0f , 0.05f , b2_kinematicBody));
-	walls.push_back(Block(0 , -1, 2.0f , 0.05f, b2_kinematicBody));
+	//walls.push_back(Block(0 , -1, 2.0f , 0.05f, b2_kinematicBody));
 
 	for (std::vector<Block>::iterator itr = walls.begin(); itr != walls.end(); itr++)
 	{
 		int index = std::distance(walls.begin(), itr);
 		Block *currentWall = &walls.at(index);
-		currentWall->setName("Wall", static_cast<int>(std::distance(walls.begin(), itr + 1)));
 		currentWall->body = world->CreateBody(&currentWall->bodyDef);
 		currentWall->body->CreateFixture(&currentWall->getShape(), 1.0f);
 		currentWall->body->SetGravityScale(1.0f);
 		currentWall->setColours(235, 85, 52);
-		currentWall->body->SetUserData(currentWall->objectInfo);
+		currentWall->typeNumber = 4;
+		currentWall->body->SetUserData(currentWall);
 	}
 
+	double previousTime = glfwGetTime();
+	double lag = 0.0f;
 
-
-
-
-
-	//Instantiate blocks
-	std::vector<Block> blocks = createBlocks(*world);
+	///MAIN GAME LOOP///
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
-		//Step forward once per loop iteration
-		world->Step(timeStep, velocityIterations, positionIterations);
 
+		///Using https://gameprogrammingpatterns.com/game-loop.html
+		//Time system keeps framerate and updates consistent between machines
+		double currentTime = glfwGetTime();
+		double elapsedTime = currentTime - previousTime;
+		previousTime = currentTime;
+		lag += elapsedTime;
+		while (lag >= timeStep)
+		{
+			world->Step(timeStep, velocityIterations, positionIterations);
+			lag -= timeStep;
+		}
+		//Step forward once per loop iteration
+		
+
+	
+		if (ball->hasCollided)
+			ball->paddleCollision(paddle);
+		
 
 		/* Setup view: */
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -159,15 +191,12 @@ int main(void)
 
 		/* Resolve any collisions */
 
-
 		/* Render here */
 
 		//Ball
 		ball->setPos(ball->body->GetPosition());
 		ball->draw();
 
-		
-		
 		//Paddle drawing
 		//Paddle rotation changes in accordance with X position
 		paddle->updateRotation();
@@ -179,28 +208,31 @@ int main(void)
 		for (Block wall : walls)
 		{
 			wall.draw(); //unnecessary to draw, drawing for debug purposes
-			wall.objectInfo->colliding = false;
 		}
 
 		//Popping blocks will cut them from being drawn.
 		for (int i = 0; i < blocks.size(); i++)
 		{		
-			blocks[i].pos = box2glfw(blocks[i].body->GetPosition());
-			//Check if box pos.y is < -1, pop from vec and delete if so.
-			//Current WIP figuring out how tf to do this.
-			if (blocks[i].getPos().y < -1.5f)
+			if (blocks[i]->isCollided() == true)
+			{
+				blocks[i]->body->SetType(b2_dynamicBody);
+			}
+
+
+			blocks[i]->draw();
+
+			//Check if box pos.y is < -1.1, pop from vec and delete if so.
+			if (blocks[i]->body->GetPosition().y < -1.1f)
 			{
 				//Erase blocks if they fall far off screen
 				blocks.erase(blocks.begin() + i);
 			}
-
-			blocks[i].draw();
-			
-
 		}
+
+
 		if (blocks.empty())
 		{
-			//Win condition!
+			exit(-1);
 		}
 		
 		/* Swap front and back buffers */
@@ -210,6 +242,7 @@ int main(void)
 
 		updatePaddlePos(window, *paddle);
 		glfwPollEvents();
+
 
 	}
 
@@ -243,37 +276,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		glfwTerminate();
 		exit(EXIT_SUCCESS);
 	}
-
-
-}
-
-std::vector<Block> createBlocks(b2World &world)
-{
-	std::vector<Block> blocks;
-
-	float xpos = -0.82f; //Starting co-ords
-	float ypos = 0.90f;
-	int count = 0;
-	for (int i = 0; i < 7; i++) //Iterating left to right
-	{
-		for (int n = 0; n < 5; n++) //Top to bottom
-		{
-			blocks.push_back(Block(xpos, ypos, 0.24f, 0.04f, b2_staticBody)); //Add to vector at current co-ords
-			ypos -= 0.1f; //Reduce Y-coord for each iteration
-			//Attach fixture to body and body to world. 1.0f dens.
-			blocks.back().body = world.CreateBody(&blocks.back().bodyDef);
-			blocks.back().body->CreateFixture(&blocks.back().getShape(), 1.0f);
-			blocks.back().body->SetGravityScale(1.0f);
-			blocks.back().setName("Block", count);
-			blocks.back().body->SetUserData(&blocks.back().objectInfo);
-			
-			count++;
-		}
-		ypos = 0.90f; //Reset Y Co-ord for each full iteration of nested loop
-		xpos += 0.27f;
-	}
-
-	return blocks;
 }
 
 
