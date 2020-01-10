@@ -2,6 +2,7 @@
 #include "Headers/Object.h"
 #include "Block.h"
 
+//Quit similar to Blocks, could probably be refactored to inherit from Block
 class Paddle : public virtual Object
 {
 private:
@@ -14,6 +15,7 @@ public:
 
 	Paddle() //Mostly see block constructor for comments
 	{
+		collided = false;
 		movingRight = true;
 		objType = PADDLE;
 		pos.y = -0.875f;
@@ -23,25 +25,23 @@ public:
 		colour[1] = 0;
 		colour[2] = 0.6f;
 		
+		//Body
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_kinematicBody;
+		bodyDef.allowSleep = false;
 
-		bodyDef.allowSleep = false; //Stops blocks from sleeping if they fall onto the paddle
-
+		//Shape
 		shape.SetAsBox(width/2, height/2);
 
-		bodyDef.angularDamping = 5.0f;
-
+		//Fixture
 		fixtureDef.shape = &shape;
 		fixtureDef.density = 2.0f;
 		fixtureDef.friction = 1.0f;
 		fixtureDef.restitution = 1.0f;
 
 	}
-	~Paddle()
-	{
+	~Paddle() {}
 
-	}
 	void setObjectType(int type) {
 		objType = type;
 	}

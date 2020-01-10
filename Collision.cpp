@@ -28,7 +28,7 @@ void Collision::BeginContact(b2Contact* contact) {
 		ball = static_cast<Ball*>(objectA);
 		break;
 	case 2:
-		paddle = static_cast<Paddle*>(objectA);
+		paddle = static_cast<Paddle*>(objectA); 
 		break;
 	case 3:
 		block = static_cast<Block*>(objectA);
@@ -66,14 +66,13 @@ void Collision::BeginContact(b2Contact* contact) {
 	//If ball and block collide
 	if (ball && block)
 	{
-
-		block->collision();
-
+		block->Collision();
 	}
 
+	//If ball and paddle collide
 	if (ball && paddle)
 	{
-		ball->hasCollided = true;
+		ball->Collision();
 	}
 
 

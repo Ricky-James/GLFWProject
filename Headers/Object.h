@@ -18,21 +18,11 @@ class Object
 {
 private:
 
-
 protected:
-	Object()
-	{
-		pos.set (0, 0);
-		width = 0;
-		height = 0;
-		setColours(0, 0, 0);
-		body = NULL;
-		
-	}
+	bool collided;
 
 public:
 
-	
 	Vector2 pos;
 
 	float width;
@@ -51,12 +41,14 @@ public:
 	//Ball 1, Paddle 2, Block 3, Wall 4
 	virtual int objectType() = 0;
 
+	bool hasCollided() { return collided; }
+	void Collision() { collided = true; }
+
 	virtual const Vector2 getPos()
 	{
 		return pos;
 	}
 
-
-
 };
 
+ 

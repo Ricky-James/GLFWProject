@@ -7,7 +7,6 @@ class Block : public virtual Object
 private:
 	
 	b2PolygonShape shape;
-	bool collided;
 
 public:
 
@@ -25,9 +24,7 @@ public:
 		colour[1] = 204 / 255.0f;
 		colour[2] = 235 / 255.0f;
 
-		//B2D
-		bodyDef.type = bodyType; //Unaffected by gravity
-		
+		///Box2D
 		//Shape
 		shape.SetAsBox(width / 2, height / 2);
 
@@ -36,17 +33,18 @@ public:
 		fixtureDef.density = 0.3f;
 		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;
-		bodyDef.linearDamping = 3.0f; //Basically air resistance
 
-		//body->SetUserData(&userdata);
-		
+		//Body
+		bodyDef.type = b2_staticBody; //Unaffected by physics (changed when hit)
+		bodyDef.linearDamping = 3.0f; //Basically air resistance
+		bodyDef.angularDamping = 0.8f;
 		bodyDef.position = b2Vec2(x, y);
+
 
 	}
 
 	~Block()
 	{		
-		
 		//Increase ball speed?
 		//Reduce paddle size?
 		//Game state can change for every block destroyed.
@@ -56,7 +54,6 @@ public:
 	int typeNumber;
 	void draw() override;
 	int objectType() override { return typeNumber; }
-	void collision();
 
 
 	const b2PolygonShape getShape() {

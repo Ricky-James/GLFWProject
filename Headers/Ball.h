@@ -23,20 +23,20 @@ public:
 	void draw() override;
 	void setPos(b2Vec2 b2pos);
 	void paddleCollision(Paddle *paddle); //For when ball collides with paddle
-	bool hasCollided;
+
 
 	const b2CircleShape getShape();
 
 	void resetPos();
 
-
 	Ball()
 	{
-		hasCollided = false;
+		collided = false;
 		colour[0] = 255;
 		colour[1] = 255;
 		colour[2] = 255;
 
+		//Body
 		bodyDef.position.Set(pos.x, pos.y);
 		bodyDef.type = b2_dynamicBody;
 		bodyDef.linearDamping = 1.0f;
@@ -45,9 +45,11 @@ public:
 		bodyDef.allowSleep = false;
 		bodyDef.angularVelocity = 1.0f;
 
+		//Shape
 		circleShape.m_p.Set(0, 0); //Position relative to body
 		circleShape.m_radius = radius;
 
+		//Fixture
 		fixtureDef.shape = &circleShape;
 		fixtureDef.friction = 0;
 		fixtureDef.restitution = 1.0f;

@@ -86,7 +86,8 @@ int main(void)
 
 	const float32 timeStep = 1.0f / 60.0f; //Step integrator (60.0 hz)
 
-	//Box2D suggests velo 8 or 6, pos 3 or 2. Fewer increases performances but accuracy suffers (box2d doc 2.4)
+	//Box2D suggests velo 8 or 6, pos 3 or 2.
+	//Fewer increases performances but accuracy suffers (box2d doc 2.4)
 	//Number of constraint iterations. completely unrelated to step count
 	int32 velocityIterations = 8;
 	int32 positionIterations = 3;
@@ -190,7 +191,7 @@ int main(void)
 		
 
 	
-		if (ball->hasCollided)
+		if (ball->hasCollided())
 			ball->paddleCollision(paddle);
 		
 
